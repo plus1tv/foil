@@ -1,37 +1,47 @@
-# ✨ Foilfolio
+<p align="center">
+  <a href="https://alain.xyz">
+    <img alt="Foilfolio" src="docs/logo.png" width="240" />
+  </a>
+</p>
+<h1 align="center">
+  Foilfolio
+</h1>
 
-[![Npm Package][npm-img]][npm-url]
 [![License][license-img]][license-url]
-[![Unit Tests][travis-img]][travis-url]
-[![Coverage Tests][codecov-img]][codecov-url]
 [![Dependency Status][david-img]][david-url]
 [![devDependency Status][david-dev-img]][david-dev-url]
 
-```bash
-npm i foilfolio -S
-```
-A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.
 
-## Use Case
+✨ Build powerful and flexible portfolios and blogs. ✨
 
-Say you want to showcase your portfolio, which is very heterogenous. It's filled with all sorts of different categories of work since you're `reddit.com/r/verysmart` and are the next Einstein-Da Vinci amalgamation.
+Whether you're a writer, artist, musician, engineer, or all of the above, there's finally a tool that offers flexibility like no other:
 
-Foilfolio makes it so that you can quickly index those works into searchable entries in a MongoDB database, and packages them up into JavaScript modules that can be loaded dynamically by a **SPA** (Single Page App).
+- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games or tools. Use 
 
-This is useful if say, you're coupling portfolio entries with React views, a simple route could give a unique application dynamically loaded by your main app. 🤯
+- 🌌 **Universal (Serverside and Clientside) rendering** by default, your Foilfolio will work regardless of your user's browser setup.
+
+- 🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
+
+- ⚔️ **State of the Art technologies**, [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), [Webpack](https://webpack.js.org/), [PostCSS](https://postcss.org/), and more. Write views in React, use 3D renderers like Marmoset Viewer, even render academic files written in Markdown + LaTeX, you'll find it all supported here.
+
+- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let Git be your CMS!
+
+## Licencing
+
+All source code is available with an MIT license, feel free to take bits and pieces and use them in your own projects. I would love to hear how you found things useful, feel free to contact me on Twitter <a href="https://twitter.com/Alainxyz">@alainxyz</a>.
 
 [cover-img]: docs/assets/logo.png
-[cover-url]: https://hyperfuse.github.io/foilfolio
+[cover-url]: https://alain.xyz/libraries/foilfolio
 [license-img]: http://img.shields.io/:license-mit-blue.svg?style=flat-square
 [license-url]: https://opensource.org/licenses/MIT
-[david-url]: https://david-dm.org/hyperfuse/foilfolio?path=packages/foilfolio
-[david-img]: https://david-dm.org/hyperfuse/foilfolio.svg?path=packages/foilfolio&style=flat-square
-[david-dev-url]: https://david-dm.org/hyperfuse/foilfolio?path=packages/foilfolio#info=devDependencies
-[david-dev-img]: https://david-dm.org/hyperfuse/foilfolio/dev-status.svg?path=packages/foilfolio&style=flat-square
-[travis-img]: https://img.shields.io/travis/hyperfuse/foilfolio.svg?style=flat-square
-[travis-url]:https://travis-ci.org/hyperfuse/foilfolio
-[codecov-img]:https://img.shields.io/codecov/c/github/hyperfuse/foilfolio.svg?style=flat-square
-[codecov-url]: https://codecov.io/gh/hyperfuse/foilfolio
+[david-url]: https://david-dm.org/alaingalvan/foilfolio?path=packages/foilfolio
+[david-img]: https://david-dm.org/alaingalvan/foilfolio.svg?path=packages/foilfolio&style=flat-square
+[david-dev-url]: https://david-dm.org/alaingalvan/foilfolio?path=packages/foilfolio#info=devDependencies
+[david-dev-img]: https://david-dm.org/alaingalvan/foilfolio/dev-status.svg?path=packages/foilfolio&style=flat-square
+[travis-img]: https://img.shields.io/travis/alaingalvan/foilfolio.svg?style=flat-square
+[travis-url]:https://travis-ci.org/alaingalvan/foilfolio
+[codecov-img]:https://img.shields.io/codecov/c/github/alaingalvan/foilfolio.svg?style=flat-square
+[codecov-url]: https://codecov.io/gh/alaingalvan/foilfolio
 [npm-img]: https://img.shields.io/npm/v/foilfolio.svg?style=flat-square
 [npm-url]: http://npm.im/foilfolio
 [npm-download-img]: https://img.shields.io/npm/dm/foilfolio.svg?style=flat-square
