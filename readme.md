@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://alain.xyz">
-    <img alt="Foilfolio" src="docs/logo.png" width="240" />
+    <img alt="Foilfolio" src="docs/logo.svg" width="240" />
   </a>
 </p>
 <h1 align="center">
@@ -24,7 +24,72 @@ Whether you're a writer, artist, musician, engineer, or all of the above, there'
 
 - ⚔️ **State of the Art technologies**, [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), [Webpack](https://webpack.js.org/), [PostCSS](https://postcss.org/), and more. Write views in React, use 3D renderers like Marmoset Viewer, even render academic files written in Markdown + LaTeX, you'll find it all supported here.
 
-- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let Git be your CMS!
+- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS!
+
+## How it Works
+
+### Foil Packages
+
+Foilfolio is built around the idea of using the `package.json` spec and combining that with extra data that's not defined in the specification inside a `foil` object:
+
+```json
+{
+  "description": "A cross platform system abstraction library written in C++ for managing windows and performing OS tasks.",
+  "main": "main.tsx",
+  "keywords": [
+    "library",
+    "libraries",
+    "github",
+    "cpp"
+  ],
+  "foil": {
+    "title": "CrossWindow",
+    "permalink": "libraries/crosswindow",
+    "main": "main.tsx",
+    "datePublished": "2018-09-16T00:00:00.000Z"
+  }
+}
+```
+
+### File Transformers
+
+Every foilfolio post starts with a package.json who's main file points to a file, be it a JavaScript, TypeScript, Markdown, or a custom file format you want to support.
+
+**Transformer functions** take file formats, and process them accordingly. For example, here's a markdown transformer:
+
+```ts
+import markademic from 'markademic';
+import { join } from 'path';
+import { readFileSync } from 'fs';
+
+export let md = {
+  // 💉 a test object that's used to compare with the `package.json` file.
+  test: { file: /\.md$/ },
+
+  // 🚒 the function that takes in the foil-ified package data and lets you modify it.
+  loader: async foil => {
+
+    var config = {
+      input: readFileSync(foil.file).toString(),
+      rerouteLinks: (link) => join(foil.permalink, link)
+    };
+
+    var data = "";
+
+    try {
+      data = markademic(config);
+    }
+    catch (e) {
+      console.error('Markademic', e.message);
+    }
+
+    return {
+      ...foil,
+      data
+    }
+  }
+}
+```
 
 ## Licencing
 
