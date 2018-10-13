@@ -1,0 +1,11 @@
+{
+  "name": "daemon",
+  "version": "0.6.0",
+  "description": "Daemon for Alain.xyz.",
+  "author": "Alain Galvan",
+  "license": "MIT",
+  "scripts": {
+    "build": "cargo build --release",
+    "start": "./target/release/daemon &"
+  }
+}

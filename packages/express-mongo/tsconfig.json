@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": [
+      "es2015.collection",
+      "es2015.promise",
+      "es2015.generator",
+      "es2017"
+    ],
+    "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noEmitHelpers": false,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true
+  }, 
+  "compileOnSave": false,
+  "buildOnSave": false
+}
