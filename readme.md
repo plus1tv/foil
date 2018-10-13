@@ -23,7 +23,7 @@ Whether you're a writer, artist, musician, engineer, or all of the above, there'
 
 - 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS!
 
-Read about some of the opinions that guided its design over [here](docs/opinions.md).
+Read about some of the *opinions* that guided its design over [here](docs/opinions.md).
 
 ## Ecosystem
 
@@ -31,11 +31,13 @@ Read about some of the opinions that guided its design over [here](docs/opinions
 
 - 🏃 `foilfolio-express-mongo` - A backend application for rendering foilfolio applications with Express and querying for data with MongoDB.
 
+- 😈 `foilfolio-github-daemon` - Responsible for keeping the server in sync with your portfolio's Github repo (so **Continuous Integration**), and uses [Github's Repository Webhooks](https://developer.github.com/v3/repos/hooks/) to do so. Alternatives such as using a git remote are also possible, but this has the added benefit of supporting the entire Github ecosystem (pull requests, tests, bots, and more).
+
 ## How it Works
 
 ### Foil Packages
 
-Every Foilfolio post starts with a [`package.json` file](https://docs.npmjs.com/files/package.json), just like any other Node module, but with the addition of the `foil` object that stores data not defined by `package.json` specification:
+Every Foilfolio post starts with a [`package.json` file](https://docs.npmjs.com/files/package.json), just like any other Node module, but with the addition of the `foil` object that stores data not defined by [`package.json` specification](https://docs.npmjs.com/files/package.json):
 
 ```json
 {
@@ -72,15 +74,14 @@ export let md = {
   // 💉 a test object that's used to compare with the `package.json` file.
   test: { file: /\.md$/ },
 
-  // 🚒 the function that takes in the foil-ified package data and lets you modify it.
-  transform: async foil => {
-
-    var config = {
-      input: readFileSync(foil.file).toString(),
-      rerouteLinks: (link) => join(foil.permalink, link)
+  // 🚒 the function that takes in the package data and lets you modify it.
+  transform: async post => {
+    let config = {
+      input: readFileSync(post.file).toString(),
+      rerouteLinks: (link) => join(post.permalink, link)
     };
 
-    var data = "";
+    let data = "";
 
     try {
       data = markademic(config);
@@ -90,7 +91,7 @@ export let md = {
     }
 
     return {
-      ...foil,
+      ...post,
       data
     }
   }
@@ -99,20 +100,20 @@ export let md = {
 
 ### Backend
 
-The backend serves as a thin client to service the API as well as prerender React components. 
+The backend serves as a thin client to service the API as well as prerender React components, and could be swapped with other backends in the future, for instance there's plans to make a Rocket.rs based Rust backend.
 
 ## Licencing
 
-All source code is available with an MIT license, feel free to take bits and pieces and use them in your own projects. I would love to hear how you found things useful, feel free to contact me on Twitter <a href="https://twitter.com/Alainxyz">@alainxyz</a>.
+All source code is available with an MIT license, feel free to take bits and pieces and use them in your own projects. I would love to hear how you found things useful, feel free to contact me on Twitter <a href="https://twitter.com/Alainxyz">@alainxyz</a> and let me know.
 
 [cover-img]: docs/assets/logo.png
 [cover-url]: https://alain.xyz/libraries/foilfolio
 [license-img]: http://img.shields.io/:license-mit-blue.svg?style=flat-square
 [license-url]: https://opensource.org/licenses/MIT
 [david-url]: https://david-dm.org/alaingalvan/foilfolio?path=packages/foilfolio
-[david-img]: https://david-dm.org/alaingalvan/foilfolio.svg?path=packages/foilfolio&style=flat-square
+[david-img]: https://david-dm.org/alaingalvan/foilfolio.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/alaingalvan/foilfolio?path=packages/foilfolio#info=devDependencies
-[david-dev-img]: https://david-dm.org/alaingalvan/foilfolio/dev-status.svg?path=packages/foilfolio&style=flat-square
+[david-dev-img]: https://david-dm.org/alaingalvan/foilfolio/dev-status.svg?style=flat-square
 [travis-img]: https://img.shields.io/travis/alaingalvan/foilfolio.svg?style=flat-square
 [travis-url]:https://travis-ci.org/alaingalvan/foilfolio
 [codecov-img]:https://img.shields.io/codecov/c/github/alaingalvan/foilfolio.svg?style=flat-square

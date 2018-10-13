@@ -1,5 +1,5 @@
 /**
- * ✨ Foilfolio
+ * ✨ Foilfolio CLI
  * Compiles the portfolio and populates it in MongoDB. 
  * Each portfolio item has a unique Build step.
  */
@@ -21,19 +21,19 @@ async function main() {
 
     let progress = `(${i + 1}/${scripts.length})`;
 
-    console.log(`\n👟 ${gray(`Running Task ${progress}...`)}\n`);
+    console.log(`\n👟 ${gray(` Running Task ${progress}...`)}\n`);
 
     await scripts[i]()
       .then(res => {
-        console.log(`\n✔️️ ${green(`Finished Task ${progress}!`)}\n`);
+        console.log(`\n✔️️ ${green(` Finished Task ${progress}!`)}\n`);
       })
       .catch(err => {
-        console.log(`\n❌ ${red(`Failed Task ${progress}!`)}\n`);
+        console.log(`\n❌ ${red(` Failed Task ${progress}!`)}\n`);
         console.error(err);
       });
 
   }
-  console.log('\n💮 ' + gray(`Finished processing ${scripts.length} tasks!\n`));
+  console.log('\n💮 ' + gray(` Finished processing ${scripts.length} tasks!\n`));
 
   return process.exit();
 };

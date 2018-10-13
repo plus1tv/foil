@@ -1,6 +1,10 @@
+# Design Opinions
+
 Every application is designed with some opinions, even though we all try to be as objective as possible. I'm opening the floor to debate about this though, no opinion here is too sacred to throw to the fire, so tweet me [@alainxyz](https://twitter.com/alainxyz) if you have differing views here.
 
 That being said, here's some of the opinions behind **Foilfolio**:
+
+---
 
 1. Don't want to be too opinionated, but the current implementation builds on React, MongoDB, Node.js, Express, Redux. I'm pretty settled on these for some really good reasons, some people might argue that you don't need mongo but to be honest, portfolios can be very heterogeneous so Mongo works really well in this use case. Some people might believe you can use Rust or C++ or Go as the backend and I agree there, I do have plans for a rust backend in the future. React goes without saying, Vue is basically angular, React is the best front end view library period. Redux is tried and tested, but there's been other libraries similar to it that may be easier to work with.
 
