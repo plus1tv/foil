@@ -7,7 +7,7 @@
 [![Dependency Status][david-img]][david-url]
 [![devDependency Status][david-dev-img]][david-dev-url]
 
-> 🚧 This is the rendering engine for my website [Alain.xyz], I'm currently in the process of making this all significantly easier to use, so bear with me for now! ~ Alain Galvan
+> 🚧 This is the rendering engine for my website [Alain.xyz](https://alain.xyz), I'm currently in the process of making this all significantly easier to use, so bear with me for now! ~ Alain Galvan
 
 ✨ Build powerful and flexible portfolios and blogs. ✨
 
@@ -23,13 +23,13 @@ Whether you're a writer, artist, musician, engineer, or all of the above, there'
 
 - 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS!
 
+Read about some of the opinions that guided its design over [here](docs/opinions.md).
+
 ## Ecosystem
 
 - 💻 `foilfolio-cli` - A command line interface to help perform tasks to index a foilfolio portfolio, from compiling packages with Webpack to cleaning the database.
 
-- 🥑 `foilfolio-cli-mongo` - A plugin for the Foilfolio CLI to use MongoDB when indexing posts.
-
-- `foilfolio-express-mongo` - A backend application for rendering foilfolio applications with Express and querying for data with MongoDB.
+- 🏃 `foilfolio-express-mongo` - A backend application for rendering foilfolio applications with Express and querying for data with MongoDB.
 
 ## How it Works
 
@@ -99,7 +99,7 @@ export let md = {
 
 ### Backend
 
-
+The backend serves as a thin client to service the API as well as prerender React components. 
 
 ## Licencing
 
