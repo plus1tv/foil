@@ -1,6 +1,5 @@
 # <a href="https://alain.xyz/blog"><img alt="Foilfolio" src="docs/logo.svg" width="240" /></a>
 
-[![Npm Package][npm-img]][npm-url]
 [![License][license-img]][license-url]
 [![Unit Tests][travis-img]][travis-url]
 [![Coverage Tests][codecov-img]][codecov-url]
