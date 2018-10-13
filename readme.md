@@ -1,16 +1,13 @@
-<p align="center">
-  <a href="https://alain.xyz">
-    <img alt="Foilfolio" src="docs/logo.svg" width="240" />
-  </a>
-</p>
-<h1 align="center">
-  Foilfolio
-</h1>
+# <a href="https://alain.xyz/blog"><img alt="Foilfolio" src="docs/logo.svg" width="240" /></a>
 
+[![Npm Package][npm-img]][npm-url]
 [![License][license-img]][license-url]
+[![Unit Tests][travis-img]][travis-url]
+[![Coverage Tests][codecov-img]][codecov-url]
 [![Dependency Status][david-img]][david-url]
 [![devDependency Status][david-dev-img]][david-dev-url]
 
+> 🚧 This is the rendering engine for my website [Alain.xyz], I'm currently in the process of making this all significantly easier to use, so bear with me for now! ~ Alain Galvan
 
 ✨ Build powerful and flexible portfolios and blogs. ✨
 
@@ -26,11 +23,19 @@ Whether you're a writer, artist, musician, engineer, or all of the above, there'
 
 - 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS!
 
+## Ecosystem
+
+- 💻 `foilfolio-cli` - A command line interface to help perform tasks to index a foilfolio portfolio, from compiling packages with Webpack to cleaning the database.
+
+- 🥑 `foilfolio-cli-mongo` - A plugin for the Foilfolio CLI to use MongoDB when indexing posts.
+
+- `foilfolio-express-mongo` - A backend application for rendering foilfolio applications with Express and querying for data with MongoDB.
+
 ## How it Works
 
 ### Foil Packages
 
-Foilfolio is built around the idea of using the `package.json` spec and combining that with extra data that's not defined in the specification inside a `foil` object:
+Every Foilfolio post starts with a [`package.json` file](https://docs.npmjs.com/files/package.json), just like any other Node module, but with the addition of the `foil` object that stores data not defined by `package.json` specification:
 
 ```json
 {
@@ -45,17 +50,18 @@ Foilfolio is built around the idea of using the `package.json` spec and combinin
   "foil": {
     "title": "CrossWindow",
     "permalink": "libraries/crosswindow",
-    "main": "main.tsx",
-    "datePublished": "2018-09-16T00:00:00.000Z"
+    "datePublished": "2018-09-16"
   }
 }
 ```
 
+
+
 ### File Transformers
 
-Every foilfolio post starts with a package.json who's main file points to a file, be it a JavaScript, TypeScript, Markdown, or a custom file format you want to support.
+Your Foilfolio post's `package.json` points to an entry file, be it JavaScript, TypeScript, Markdown, or a custom file format you want to support.
 
-**Transformer functions** take file formats, and process them accordingly. For example, here's a markdown transformer:
+**Transformers** use a **`test`** object to compare with the current post, and if there's a match, executes a **`transform`** which returns a modified version of a Foilfolio post. For example, here's a transformer for [academically flavored markdown](https://github.com/hyperfuse/markademic):
 
 ```ts
 import markademic from 'markademic';
@@ -67,7 +73,7 @@ export let md = {
   test: { file: /\.md$/ },
 
   // 🚒 the function that takes in the foil-ified package data and lets you modify it.
-  loader: async foil => {
+  transform: async foil => {
 
     var config = {
       input: readFileSync(foil.file).toString(),
@@ -90,6 +96,10 @@ export let md = {
   }
 }
 ```
+
+### Backend
+
+
 
 ## Licencing
 
