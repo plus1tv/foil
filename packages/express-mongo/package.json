@@ -1,5 +1,5 @@
 {
-  "name": "alain-xyz-backend",
+  "name": "foilfolio-express-mongo",
   "version": "0.5.0",
   "description": "My personal website backend, designed as a thin API and wrapper to the frontend.",
   "author": "Alain Galvan <hi@alain.xyz>",

@@ -8,7 +8,6 @@
  *  
  * - 📊 Help keep track of views, shares and likes over time.
  * 
- * - 
  */
 
 import { red, cyan, green, gray } from 'chalk';

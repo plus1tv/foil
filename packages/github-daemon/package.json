@@ -1,7 +1,7 @@
 {
-  "name": "daemon",
+  "name": "foilfolio-github-daemon",
   "version": "0.6.0",
-  "description": "Daemon for Alain.xyz.",
+  "description": "Daemon for Foilfolio applications.",
   "author": "Alain Galvan",
   "license": "MIT",
   "scripts": {
