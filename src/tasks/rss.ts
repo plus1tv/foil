@@ -1,6 +1,6 @@
-import RSS from 'rss';
-import { database } from '../../../backend/src/db';
-import { writeFileSync, fstatSync, statSync } from 'fs';
+import * as RSS from 'rss';
+import { database } from '../db';
+import { writeFileSync, statSync } from 'fs';
 import { join } from 'path';
 
 export async function rssFeed() {
@@ -25,7 +25,17 @@ export async function rssFeed() {
 
     language: 'English',
 
-    categories: [ 'vulkan', 'c++', 'programming', 'graphics', 'opengl', 'metal', 'directx', 'research', 'algorithms' ],
+    categories: [
+      'vulkan',
+      'c++',
+      'programming',
+      'graphics',
+      'opengl',
+      'metal',
+      'directx',
+      'research',
+      'algorithms'
+    ],
 
     pubDate: new Date(),
 
@@ -35,44 +45,41 @@ export async function rssFeed() {
   let rss = new RSS(config);
 
   // Populate RSS Feed
-  let foilfolioData = await new Promise<any[]>((res, rej) =>
-    database.then((client) => {
+  let foilfolioData = await new Promise<any[]>((res, _) => database
+    .then(client => {
       let db = client.db('db');
       var col = db.collection('portfolio');
 
-      let data = col
-        .find({
-          datePublished: { $lte: new Date() },
-          permalink: new RegExp('/blog/w*')
-        })
+      col.find({
+        datePublished: { $lte: new Date() },
+        permalink: new RegExp('/blog/\w*')
+      })
         .limit(30)
         .sort({
           datePublished: -1
         })
         .toArray((err, data) => {
-          if (err || data.length === 0) return rej();
+          if (err || data.length === 0)
+            return res([]);
           res(data);
         });
-    })
-  );
+    }));
 
   for (var item of foilfolioData) {
-    let fileData = await new Promise<any[]>((res, rej) =>
-      database.then((client) => {
+    let fileData = await new Promise<any[]>((res, _) => database
+      .then(client => {
         let db = client.db('db');
         var col = db.collection('redirect');
-
-        let data = col
-          .find({
-            from: item.image
-          })
+        col.find({
+          from: item.cover
+        })
           .limit(1)
           .toArray((err, data) => {
-            if (err || data.length === 0) return rej();
+            if (err || data.length === 0)
+              return res(null);
             res(data);
           });
-      })
-    );
+      }));
 
     var filesize = 0;
 
@@ -86,7 +93,7 @@ export async function rssFeed() {
       url: 'https://alain.xyz' + item.permalink,
       date: item.datePublished,
       enclosure: {
-        url: 'https://alain.xyz' + item.image,
+        url: 'https://alain.xyz' + item.cover,
         size: filesize
       }
     });
@@ -96,11 +103,12 @@ export async function rssFeed() {
   let xml = rss.xml();
 
   // Place in `frontend/assets/rss.xml`
-  let p = join('..', 'frontend', 'assets', 'rss.xml');
+  let p = join('..', 'frontend', 'assets', 'rss.xml')
   try {
     writeFileSync(p, xml);
-    console.log('RSS feed successfully generated. \n');
-  } catch (e) {
+    console.log('RSS feed successfully generated. \n Written to ' + p + '\n');
+  }
+  catch (e) {
     console.error('Could not generate RSS Feeds! \n');
   }
 }

@@ -28,10 +28,6 @@ Read about some of the *opinions* that guided its design over [here](docs/opinio
 
 - 💻 `foilfolio-cli` - A command line interface to help perform tasks to index a foilfolio portfolio, from compiling packages with Webpack to cleaning the database.
 
-- 🏃 `foilfolio-express-mongo` - A backend application for rendering foilfolio applications with Express and querying for data with MongoDB.
-
-- 😈 `foilfolio-github-daemon` - Responsible for keeping the server in sync with your portfolio's Github repo (so **Continuous Integration**), and uses [Github's Repository Webhooks](https://developer.github.com/v3/repos/hooks/) to do so. Alternatives such as using a git remote are also possible, but this has the added benefit of supporting the entire Github ecosystem (pull requests, tests, bots, and more).
-
 ## How it Works
 
 ### Foil Packages
@@ -55,8 +51,6 @@ Every Foilfolio post starts with a [`package.json` file](https://docs.npmjs.com/
   }
 }
 ```
-
-
 
 ### File Transformers
 

@@ -1,5 +1,5 @@
 import builder from './builder';
-import { ts, md } from './loaders';
+import { ts, blog, book } from './loaders';
 
 /**
  * Loaders waterfall through, and performs a deep search on the loader. If the package matches,
@@ -7,7 +7,8 @@ import { ts, md } from './loaders';
  */
 let loaders = [
     ts,
-    md
+    blog,
+    book
 ]
 
 export async function build() {
