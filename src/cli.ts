@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * ✨ Foilfolio v0.1.0
  * A sparkly shiny portfolio management system.

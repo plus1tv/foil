@@ -4,7 +4,7 @@ import * as find from 'find';
 import * as globToRegExp from 'glob-to-regexp';
 import { yellow } from 'chalk';
 
-import { RootDir, Defaults } from '../../config';
+import { Defaults } from '../../config';
 import { Post, Loader } from './types';
 
 import { getAsset, getDatabaseFiles, writeToDb } from './utils';
@@ -135,7 +135,7 @@ export function foilify(packagePath: string): Post {
         if (/\*/.exec(file) === null) {
             packageFilesSet.add(file);
         } else {
-            let otherFiles = find.fileSync(globToRegExp(file), RootDir);
+            let otherFiles = find.fileSync(globToRegExp(file), Defaults.rootDir);
             for (let otherFile of otherFiles) {
                 packageFilesSet.add(otherFile);
             }
@@ -181,7 +181,7 @@ export default async function builder(loaders: Loader[]) {
     console.log('🌟 ' + yellow('Foilfolio Package Builder\n'));
 
     // Find all package.json files
-    let packages = find.fileSync(/\package.json$/, RootDir);
+    let packages = find.fileSync(/\package.json$/, Defaults.rootDir);
     packages = packages.filter((cur) => !cur.match(/node_modules/));
 
     for (var pack of packages) {

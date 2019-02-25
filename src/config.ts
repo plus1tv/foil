@@ -1,15 +1,29 @@
 import * as path from 'path';
+import * as fs from 'fs';
 
-export const RootDir = path.join(__dirname, '..');
-
-export const Defaults = {
+let Defaults = {
     //default author
     author: {
-        name: 'Alain Galvan',
-        email: 'hi@alain.xyz',
-        url: 'https://alain.xyz'
+        name: 'Foil Folio',
+        email: 'hello@foilfoilio.com',
+        url: 'https://foilfolio.com'
     },
 
     //default files
-    files: ["assets/*"]
+    files: [ 'assets/*' ],
+
+    rootDir: path.resolve('.')
 };
+
+let jsonPath = path.join(path.resolve('.'), 'foilfolio.json');
+if (fs.existsSync(jsonPath)) {
+    console.log("⚙️ Found foilfolio.json file.")
+    let newDefaults = require(jsonPath);
+    Defaults = { ...Defaults, ...newDefaults };
+
+    if (!path.isAbsolute(Defaults.rootDir)) {
+        Defaults.rootDir = path.join(path.resolve('.'), Defaults.rootDir);
+    }
+}
+
+export { Defaults };

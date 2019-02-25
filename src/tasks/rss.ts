@@ -2,6 +2,7 @@ import * as RSS from 'rss';
 import { database } from '../db';
 import { writeFileSync, statSync } from 'fs';
 import { join } from 'path';
+import { Defaults } from '../config';
 
 export async function rssFeed() {
   console.log('📻 Foilfolio RSS Feeds \n');
@@ -103,7 +104,7 @@ export async function rssFeed() {
   let xml = rss.xml();
 
   // Place in `frontend/assets/rss.xml`
-  let p = join('..', 'frontend', 'assets', 'rss.xml')
+  let p = join(Defaults.rootDir, '..', 'frontend', 'assets', 'rss.xml')
   try {
     writeFileSync(p, xml);
     console.log('RSS feed successfully generated. \n Written to ' + p + '\n');
