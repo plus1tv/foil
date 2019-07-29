@@ -12,7 +12,7 @@
 
 Whether you're a writer, artist, musician, engineer, or all of the above, there's finally a tool that offers flexibility like no other:
 
-- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games or tools. Use 
+- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games or tools. Use JavaScript Modules for it all, and have it all automatically combine and transpile together for your post.
 
 - 🌌 **Universal (Serverside and Clientside) rendering** by default, your Foilfolio will work regardless of your user's browser setup.
 
