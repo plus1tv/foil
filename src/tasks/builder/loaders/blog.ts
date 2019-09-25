@@ -11,9 +11,9 @@ export let blog: Loader = {
     // 🚒 the function that takes in the package data and lets you modify it.
     transform: async (foil) => {
         console.log('📝 Blog Transformer\n');
-        let mdFile = null;
-        var audioFile = null;
 
+        // 🦜 Setup Markademic Compilation
+        let mdFile = null;
         for (let file of foil.files) {
             if (/\.md$/.exec(file.path)) {
                 mdFile = file;
@@ -23,12 +23,6 @@ export let blog: Loader = {
         if (!mdFile) {
             //throw new Error("There's no .md file available in this foilfolio post.");
             return foil;
-        }
-
-        for (let file of foil.files) {
-            if (/\.mp3$/.exec(file.path)) {
-                audioFile = file.path.substr(foil.rootPath.length).replace(/\\/g, '/');;
-            }
         }
 
         var config = {
@@ -44,14 +38,34 @@ export let blog: Loader = {
 
         var article = markademic(config);
 
+        // 🎧 Setup Audioblog Data (Optional)
+        var audioFile = null;
+        for (let file of foil.files) {
+            if (/\.mp3$/.exec(file.path)) {
+                audioFile = file.path.substr(foil.rootPath.length).replace(/\\/g, '/');
+            }
+        }
+        var captions: { time: number; highlight: { begin: number; end: number }[] }[] = [];
+        var captionsPath = join(foil.rootPath, 'captions.json');
+        if (existsSync(captionsPath)) {
+            captions = require(captionsPath).captions;
+            if (Array.isArray(captions)) {
+                captions = [];
+            }
+        }
+
+
+        // 💾 Finalize Data
         var data = {
             article,
-            audio: audioFile
+            audio: {
+                file: audioFile,
+                captions
+            }
         };
 
-        if (typeof foil['data'] === 'object')
-        {
-            data = {...foil.data, article }
+        if (typeof foil['data'] === 'object') {
+            data = { ...foil.data, article };
         }
 
         return {
