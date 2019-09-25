@@ -5,7 +5,7 @@ import * as globToRegExp from 'glob-to-regexp';
 import { yellow } from 'chalk';
 
 import { Defaults } from '../../config';
-import { Post, Loader } from './types';
+import { Post, BuildState, Loader } from './types';
 
 import { getAsset, getDatabaseFiles, writeToDb } from './utils';
 
@@ -124,7 +124,7 @@ export function foilify(packagePath: string): Post {
 
 
     // Files this package uses as inputs for later loaders
-    let packageFilesSet = new Set();
+    let packageFilesSet = new Set<string>();
     packageFilesSet.add(packagePath);
 
     if (main) {
@@ -184,11 +184,12 @@ export default async function builder(loaders: Loader[]) {
     let packages = find.fileSync(/\package.json$/, Defaults.rootDir);
     packages = packages.filter((cur) => !cur.match(/node_modules/));
 
+    var modifiedFiles = new Set<string>();
     for (var pack of packages) {
         // Import package.json and set some defaults
         let foil = foilify(pack);
 
-        // If it's a foil module, compile it with loaders
+        // ✨ If it's a foil module, compile it with loaders
         if (foil) {
             console.log('⚪ Processing ' + pack + '\n');
             let shouldCompile = false;
@@ -196,7 +197,7 @@ export default async function builder(loaders: Loader[]) {
             var databaseFiles: { path: string; modified: Date }[] = await getDatabaseFiles(foil.rootPath);
             shouldCompile = shouldCompile || databaseFiles.length < 1;
 
-            //check if existing file has been modified
+            // 🦨 check if existing file has been modified
             for (let databaseFile of databaseFiles) {
                 if (fs.existsSync(databaseFile.path)) {
                     shouldCompile =
@@ -206,7 +207,7 @@ export default async function builder(loaders: Loader[]) {
                 }
             }
 
-            //check if there's any new files, or files that have been renamed
+            //🐣 check if there's any new files, or files that have been renamed
             if (!shouldCompile) {
                 for (let file of foil.files) {
                     let matchingFile = false;
@@ -214,13 +215,18 @@ export default async function builder(loaders: Loader[]) {
                         matchingFile = matchingFile || file.path == databaseFile.path;
                         if (matchingFile) break;
                     }
+
                     shouldCompile = shouldCompile || !matchingFile;
                 }
             }
 
             if (shouldCompile) {
-                let compiledModule = await compile(loaders, foil);
+                let compiledModule = await compile({loaders, modifiedFiles}, foil);
                 await writeToDb(compiledModule);
+                for (var file of foil.files)
+                {
+                    modifiedFiles.add(file.path);
+                }
             }
         }
     }
@@ -231,9 +237,9 @@ export default async function builder(loaders: Loader[]) {
  * @param loaders A matching algorithm and a compiler function.
  * @param foilModule Current foil module.
  */
-async function compile(loaders: Loader[], foilModule: Post) {
+async function compile(state: BuildState, foilModule: Post) {
     // Check each loader for a match
-    for (let rule of loaders) {
+    for (let rule of state.loaders) {
         // Perform deep comparison
         let compare = Object.keys(rule.test).reduce((prev, cur) => {
             let reg = new RegExp(rule.test[cur]);
@@ -242,7 +248,7 @@ async function compile(loaders: Loader[], foilModule: Post) {
 
         if (compare) {
             try {
-                foilModule = await rule.transform(foilModule);
+                foilModule = await rule.transform(foilModule, state.modifiedFiles);
             } catch (e) {
                 console.error(e);
             }

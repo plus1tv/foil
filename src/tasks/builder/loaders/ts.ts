@@ -13,7 +13,7 @@ export const ts: Loader = {
     test: {
         main: /\.tsx?$/
     },
-    transform: async (foil) => {
+    transform: async (foil, modifiedFiles) => {
         console.log('💙 TypeScript Transformer\n');
         // Get file path
         let file = foil.main;
@@ -21,8 +21,10 @@ export const ts: Loader = {
             file = join(foil.rootPath, foil.main);
         }
         file.replace(/\\/g, '/');
-        let newFile = file.replace(/\.tsx?$/, '.js').replace(/\\/g, '/');
-        let newMain = join(foil.rootPermalink, foil.main).replace(/\.tsx?$/, '.js').replace(/\\/g, '/');
+        var oldFile = file;
+        var newFile = file.replace(/\.tsx?$/, '.js').replace(/\\/g, '/');
+        var oldMain = join(foil.rootPermalink, foil.main).replace(/\\/g, '/');
+        var newMain = oldMain.replace(/\.tsx?$/, '.js');
         // Check if main file has been updated or never existed.
         let updated = checkUpdated(newFile);
 
@@ -33,7 +35,14 @@ export const ts: Loader = {
                 await installDependencies(foil.rootPath);
             }
             // Compile module with Webpack
-            await compile(join(newFile, '..'), './main', foil.title, foil.rootPermalink);
+            if(!modifiedFiles.has(oldFile))
+            {
+                await compile(join(newFile, '..'), './main', foil.title, foil.rootPermalink);
+            }
+            else
+            {
+                console.log("Avoiding recompilation of " + foil.main + '\n');
+            }
 
             // Update in Database
             await updateInDatabase(newFile, newMain, file);

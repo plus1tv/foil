@@ -9,7 +9,7 @@ export let blog: Loader = {
     test: { permalink: /^\/(blog|research|libraries)/ },
 
     // 🚒 the function that takes in the package data and lets you modify it.
-    transform: async (foil) => {
+    transform: async (foil, modifiedFiles) => {
         console.log('📝 Blog Transformer\n');
 
         // 🦜 Setup Markademic Compilation

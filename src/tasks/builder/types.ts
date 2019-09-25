@@ -17,5 +17,12 @@ export type Loader = {
     test: {
         [key: string]: RegExp;
     };
-    transform: (post: Post) => Promise<Post>;
+    transform: (post: Post, modifiedFiles: Set<string>) => Promise<Post>;
 };
+
+export type BuildState = {
+    // 🚒 Loaders and their transformer functions
+    loaders: Loader[],
+    // 🌟 Files that have already been processed
+    modifiedFiles: Set<string>
+}
