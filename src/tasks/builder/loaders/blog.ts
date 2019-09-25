@@ -12,6 +12,7 @@ export let blog: Loader = {
     transform: async (foil) => {
         console.log('📝 Blog Transformer\n');
         let mdFile = null;
+        var audioFile = null;
 
         for (let file of foil.files) {
             if (/\.md$/.exec(file.path)) {
@@ -22,6 +23,12 @@ export let blog: Loader = {
         if (!mdFile) {
             //throw new Error("There's no .md file available in this foilfolio post.");
             return foil;
+        }
+
+        for (let file of foil.files) {
+            if (/\.mp3$/.exec(file.path)) {
+                audioFile = file.path.substr(foil.rootPath.length).replace(/\\/g, '/');;
+            }
         }
 
         var config = {
@@ -35,7 +42,17 @@ export let blog: Loader = {
             config['citations'] = require(bibPath);
         }
 
-        var data = markademic(config);
+        var article = markademic(config);
+
+        var data = {
+            article,
+            audio: audioFile
+        };
+
+        if (typeof foil['data'] === 'object')
+        {
+            data = {...foil.data, article }
+        }
 
         return {
             ...foil,
