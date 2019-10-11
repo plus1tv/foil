@@ -124,7 +124,7 @@ export function foilify(packagePath: string): Post {
 
 
     // Files this package uses as inputs for later loaders
-    let packageFilesSet = new Set();
+    let packageFilesSet = new Set<string>();
     packageFilesSet.add(packagePath);
 
     if (main) {
@@ -142,7 +142,7 @@ export function foilify(packagePath: string): Post {
         }
     }
 
-    let packageFiles = Array.from(packageFilesSet);
+    let packageFiles = Array.from<string>(packageFilesSet);
 
     let foilFiles = buildFoilFiles(rootPath, packageFiles);
 

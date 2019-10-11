@@ -1,46 +1,56 @@
 {
-    "name": "foilfolio-cli",
-    "version": "0.1.0",
-    "description": "✨A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/alaingalvan/foilfolio.git"
-    },
-    "author": "Alain Galvan <hi@alain.xyz>",
-    "license": "MIT",
-    "main": "./bin/cli.js",
-    "bin": {
-        "foilfolio-cli": "./bin/cli"
-    },
-    "engines": {
-        "node": ">=8"
-    },
-    "scripts": {
-        "build": "tsc"
-    },
-    "devDependencies": {
-        "@types/chalk": "^2.2.0",
-        "@types/mongodb": "^3.3.5",
-        "@types/node": "^12.7.11",
-        "@types/react": "^16.9.5",
-        "@types/react-redux": "^7.1.4",
-        "@types/react-router": "^5.1.1",
-        "@types/react-router-dom": "^5.1.0",
-        "@types/rss": "^0.0.28",
-        "@types/webpack": "^4.39.2",
-        "typescript": "3.6.4"
-    },
-    "dependencies": {
-        "chalk": "^2.4.2",
-        "cross-env": "^6.0.3",
-        "file-loader": "^3.0.1",
-        "find": "^0.3.0",
-        "glob-to-regexp": "^0.4.1",
-        "id3js": "^2.1.1",
-        "markademic": "^0.11.0",
-        "mongodb": "^3.3.2",
-        "rss": "^1.2.2",
-        "webpack": "3.12.0",
-        "webpack-system-register": "^1.6.0"
-    }
+	"name": "foilfolio-cli",
+	"version": "0.1.0",
+	"description": "✨A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/alaingalvan/foilfolio.git"
+	},
+	"author": "Alain Galvan <hi@alain.xyz>",
+	"license": "MIT",
+	"main": "./bin/cli.js",
+	"bin": {
+		"foilfolio-cli": "./bin/cli.js"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"scripts": {
+		"start": "npm run build && npm link",
+		"build": "tsc",
+		"develop": "tsc -w"
+	},
+	"devDependencies": {
+		"@types/chalk": "^2.2.0",
+		"@types/mongodb": "^3.3.5",
+		"@types/node": "^12.7.11",
+		"@types/react": "^16.9.5",
+		"@types/react-redux": "^7.1.4",
+		"@types/react-router": "^5.1.1",
+		"@types/react-router-dom": "^5.1.0",
+		"@types/rss": "^0.0.28",
+		"@types/webpack": "^4.4.24",
+		"typescript": "3.6.4"
+	},
+	"dependencies": {
+		"chalk": "^2.4.2",
+		"cross-env": "^6.0.3",
+		"file-loader": "^3.0.1",
+		"find": "^0.3.0",
+		"glob-to-regexp": "^0.4.1",
+		"id3js": "^2.1.1",
+		"markademic": "^0.11.0",
+		"mongodb": "^3.3.2",
+		"rss": "^1.2.2",
+		"ts-loader": "^5.3.3",
+		"webpack": "3.12.0",
+		"webpack-system-register": "^1.6.0"
+	},
+	"bugs": {
+		"url": "https://github.com/alaingalvan/foilfolio/issues"
+	},
+	"homepage": "https://github.com/alaingalvan/foilfolio#readme",
+	"directories": {
+		"doc": "docs"
+	}
 }
