@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'fs';
 import { Loader } from '../types';
 
 export let book: Loader = {
-    test: { permalink: /^\/books\// },
+    test: { permalink: /^\/books\/|docs/ },
     transform: async (foil) => {
         console.log('📚 Book Transformer\n');
 
@@ -108,6 +108,10 @@ export let book: Loader = {
                 child.link = child.link.substr(0, child.link.length - 1);
                 filePath += 'index.md';
             }
+            
+            child.link = join('/', foil.rootPermalink, child.link).replace(/\\/gi, '/');
+            console.log(child.link);
+            console.log(filePath);
 
             if (!isFile && !isPath) {
                 // raw-vulkan/ch1-introduction

@@ -1,3 +1,5 @@
+<div align="center">
+
 # <a href="https://alain.xyz/blog"><img alt="Foilfolio" src="docs/logo.svg" width="240" /></a>
 
 [![License][license-img]][license-url]
@@ -6,11 +8,13 @@
 [![Dependency Status][david-img]][david-url]
 [![devDependency Status][david-dev-img]][david-dev-url]
 
-> 🚧 This is the rendering engine for my website [Alain.xyz](https://alain.xyz), I'm currently in the process of making this all significantly easier to use, so bear with me for now! ~ Alain Galvan
+> ✨ Build powerful and flexible portfolios and blogs. ✨
 
-✨ Build powerful and flexible portfolios and blogs. ✨
+</div>
 
-Whether you're a writer, artist, musician, engineer, or all of the above, there's finally a tool that offers flexibility like no other:
+Whether you're a writer, artist, musician, engineer, or all of the above, this tool makes it easy and fast to showcase a variety of content.
+
+## Features
 
 - 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games or tools. Use JavaScript Modules for it all, and have it all automatically combine and transpile together for your post.
 
@@ -90,10 +94,6 @@ export let md = {
   }
 }
 ```
-
-### Backend
-
-The backend serves as a thin client to service the API as well as prerender React components, and could be swapped with other backends in the future, for instance there's plans to make a Rocket.rs based Rust backend.
 
 ## Licencing
 
