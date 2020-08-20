@@ -65,7 +65,7 @@ export async function writeToDb(foil: Post) {
         var staticFiles = find
             .fileSync(foil.rootPath)
             .filter(
-                (f) => !(ignoredTypes.reduce((prev, cur) => prev || f.endsWith(cur), false) || f.match(/node_modules/))
+                (f) => !(ignoredTypes.reduce((prev, cur) => prev || f.endsWith(cur), false) || f.match(/node_modules|diary/))
             );
 
         // Add Static files to database
