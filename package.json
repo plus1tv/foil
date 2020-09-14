@@ -1,6 +1,6 @@
 {
 	"name": "foilfolio-cli",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "✨A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
