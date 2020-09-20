@@ -18,15 +18,17 @@ export async function clean() {
             col.find({}).toArray().catch((err) => console.error(err)).then((res) => {
                 if (res)
                     for (var f of res) {
-                        let { _id } = f;
+                        let { _id, permalink = null } = f;
                         let files = f.to ? [ { path: f.to } ] : f.files;
                         for (let file of files) {
+                            //Should we delete this entry?
                             let deleteThis = () => {
                                 col
                                     .deleteOne({ _id })
                                     .catch((err) => console.error(err))
                                     .then(() => console.log('Removed ' + file.path));
                             };
+
                             if (/\.([A-z])*$/.test(file.path))
                                 fs.exists(file.path, (exists) => {
                                     if (!exists) {
@@ -34,10 +36,17 @@ export async function clean() {
                                     }
 
                                     if (exists && Path.basename(file.path) == 'package.json') {
-                                        if (f.permalink) {
+                                        if (permalink) {
                                             //check if package.json has same permalink as this, if not delete this.
                                             let pack = require(file.path);
-                                            if (pack.foil && pack.foil.permalink !== '/' + f.permalink) {
+                                            if (pack.foil && '/' + pack.foil.permalink !== permalink) {
+                                                console.log(
+                                                    'Permalink ' +
+                                                        permalink +
+                                                        ' does not match ' +
+                                                        pack.foil.permalink +
+                                                        ', deleting.'
+                                                );
                                                 deleteThis();
                                             }
                                         }
