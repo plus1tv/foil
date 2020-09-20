@@ -15,7 +15,7 @@ export async function redirects() {
         for (var rd of redirects) {
             if (rd.to && rd.from) {
                 let query = {
-                    to: rd.to
+                    from: rd.from
                 };
 
                 let options = {
