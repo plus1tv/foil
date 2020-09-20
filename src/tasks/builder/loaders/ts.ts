@@ -81,13 +81,13 @@ async function checkUpdated(path: string) {
 }
 
 /**
- * Downloads dependencies with yarn. 
+ * Downloads dependencies. 
  * @param path absolute path to folder of JavaScript file.
  */
 function installDependencies(path: string) {
-	// Run yarn, install local node_modules
+	// Run package manager, install local node_modules
 	return new Promise((res, rej) => {
-		exec('yarn', { cwd: path }, (err, stdout, _) => {
+		exec('npm i', { cwd: path }, (err, stdout, _) => {
 			console.log('Installing dependencies at %s', path);
 			if (err) rej(err);
 			else res(stdout);

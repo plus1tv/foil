@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import { Collection } from 'mongodb';
 import { database } from '../db';
+import * as Path from 'path';
+import { isForOfStatement } from 'typescript';
 
 /**
  * Run through every indexed file and portfolio item to see if it still exists. 
@@ -19,18 +21,34 @@ export async function clean() {
                         let { _id } = f;
                         let files = f.to ? [ { path: f.to } ] : f.files;
                         for (let file of files) {
+                            let deleteThis = () => {
+                                col
+                                    .deleteOne({ _id })
+                                    .catch((err) => console.error(err))
+                                    .then(() => console.log('Removed ' + file.path));
+                            };
                             if (/\.([A-z])*$/.test(file.path))
                                 fs.exists(file.path, (exists) => {
                                     if (!exists) {
-                                        col
-                                            .deleteOne({ _id })
-                                            .catch((err) => console.error(err))
-                                            .then(() => console.log('Removed ' + file.path));
+                                        deleteThis();
+                                    }
+
+                                    if (exists && Path.basename(file.path) == 'package.json') {
+                                        if (f.permalink) {
+                                            //check if package.json has same permalink as this, if not delete this.
+                                            let pack = require(file.path);
+                                            if (pack.foil && pack.foil.permalink !== '/' + f.permalink) {
+                                                deleteThis();
+                                            }
+                                        }
                                     }
                                 });
                         }
+                        //there can only be one database entry per file set
                     }
             });
+
+        //delete stale database entries (permalink redirecting)
 
         await cleanFiles(redirectCol);
         console.log('✨ Cleaned files collection.');
