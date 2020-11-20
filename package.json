@@ -39,7 +39,7 @@
 		"find": "^0.3.0",
 		"glob-to-regexp": "^0.4.1",
 		"id3js": "^2.1.1",
-		"markademic": "^0.12.1",
+		"markademic": "^0.12.3",
 		"mongodb": "^3.6.0",
 		"rss": "^1.2.2",
 		"ts-loader": "^5.3.3",
