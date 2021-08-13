@@ -183,7 +183,13 @@ function compile(root: string, main: string, title: string, permalink: string) {
 				console.log(
 					yellow(
 						`Build Succeeded with ${stats.compilation.errors.length} errors.\n` +
-							stats.compilation.errors.reduce((prev, cur) => prev + cur + '\n', '\n')
+							stats.compilation.errors.reduce((prev, cur) => {
+								if( typeof cur === 'object' )
+								{
+									return prev + cur.message + '\n';
+								}
+								return prev + cur + '\n';
+							}, '\n')
 					)
 				);
 			}
