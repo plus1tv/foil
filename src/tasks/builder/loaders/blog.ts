@@ -6,7 +6,7 @@ import { Loader } from '../types';
 
 export let blog: Loader = {
     // 💉 a test object that's used to compare with the `package.json` file.
-    test: { permalink: /^\/(blog|research|libraries)/ },
+    test: { permalink: /^\/(blog|research|libraries|notes)/ },
 
     // 🚒 the function that takes in the package data and lets you modify it.
     transform: async (foil) => {
