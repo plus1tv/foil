@@ -4,7 +4,7 @@ const url = 'mongodb://localhost:27017';
 
 console.log('🍃 Opening MongoDB Connection.');
 
-const database: Promise<MongoClient> = MongoClient.connect(url, { useNewUrlParser: true }).catch((reason) =>
+const database: Promise<MongoClient> = MongoClient.connect(url).catch((reason) =>
     console.error(reason)
 ) as Promise<MongoClient>;
 
