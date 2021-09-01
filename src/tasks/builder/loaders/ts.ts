@@ -9,8 +9,7 @@ import { Collection } from 'mongodb';
 
 import { Loader } from '../types';
 
-let env = process.env['NODE_ENV'];
-let isProduction = env && env.match(/production/);
+import { isProduction } from '../../../env';
 
 export const ts: Loader = {
     test: {
@@ -189,14 +188,15 @@ function compile(root: string, main: string, title: string, permalink: string) {
 			}),
             new webpack.DefinePlugin({
                 'process.env': {
-                    NODE_ENV: JSON.stringify('production')
+                    NODE_ENV: JSON.stringify(
+                        isProduction ? 'production' : 'development'
+                    )
                 }
             })
         ],
         optimization: {
             minimize: isProduction ? true : false
-        },
-        stats: 'detailed'
+        }
     };
 
     console.log(`  🔨 Building Module '${title}'\n  ... `);
