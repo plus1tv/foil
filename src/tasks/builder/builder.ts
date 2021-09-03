@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as find from 'find';
 import * as globToRegExp from 'glob-to-regexp';
 import { yellow } from 'chalk';
+import { toList } from 'dependency-tree';
 
 import { config } from '../../config';
 import { Post, Loader } from './types';
@@ -12,7 +13,7 @@ import { getAsset, getDatabaseFiles, writeToDb } from './utils';
 /**
  * Builds a list of foilfolio files. Used to check if a foilfolio entry has been updated.
  * @param rootPath The root file path.
- * @param foilFiles A list of foilfolio file path / modified combo 
+ * @param foilFiles A list of foilfolio file path / modified combo
  * @param otherFiles A list of path strings
  */
 export function buildFoilFiles(
@@ -21,7 +22,6 @@ export function buildFoilFiles(
     foilFiles: { path: string; modified: Date }[] = []
 ) {
     for (let m of otherFiles) {
-        let filePath = m;
         if (!path.isAbsolute(m)) {
             m = path.join(rootPath, m);
         }
@@ -39,7 +39,7 @@ export function buildFoilFiles(
         }
     }
 
-    return [ ...foilFiles ];
+    return [...foilFiles];
 }
 
 /**
@@ -63,7 +63,7 @@ export function foilify(packagePath: string): Post {
 
     let authors = [];
 
-    let checkAuthor = (author) => {
+    let checkAuthor = author => {
         let curAuthor = {
             name: '',
             email: '',
@@ -81,7 +81,9 @@ export function foilify(packagePath: string): Post {
             if (url) curAuthor.url = url[0];
         } else typeof author === 'object';
         {
-            (curAuthor.name = author.name), (curAuthor.email = author.email), (curAuthor.url = author.url);
+            (curAuthor.name = author.name),
+                (curAuthor.email = author.email),
+                (curAuthor.url = author.url);
         }
         return curAuthor;
     };
@@ -96,21 +98,25 @@ export function foilify(packagePath: string): Post {
 
     let rootPath = path.join(packagePath, '..');
     let { permalink } = foil;
-    
+
     if (!permalink) {
-        console.warn('Foil package has no permalink! Foilfolio needs a permalink to resolve routes!');
+        console.warn(
+            'Foil package has no permalink! Foilfolio needs a permalink to resolve routes!'
+        );
         return null;
     }
 
     if (permalink.charAt(0) == '/') {
-        console.warn('Foil package has an invalid permalink. Permalinks cannot start with /');
+        console.warn(
+            'Foil package has an invalid permalink. Permalinks cannot start with /'
+        );
         return null;
     }
 
     permalink = '/' + permalink;
-    
+
     let rootPermalink = permalink;
-    
+
     if (/\*$/.exec(permalink)) {
         rootPermalink = permalink.replace(/\*$/, '');
     }
@@ -121,14 +127,41 @@ export function foilify(packagePath: string): Post {
         icon = getAsset(packagePath, rootPermalink, 'icon')
     } = foil;
 
-
-
     // Files this package uses as inputs for later loaders
     let packageFilesSet = new Set<string>();
     packageFilesSet.add(packagePath);
 
     if (main) {
         packageFilesSet.add(main);
+        if (main.match(/\.tsx$/)) {
+            let filename = main;
+            if (!path.isAbsolute(filename)) {
+                filename = path.join(rootPath, filename);
+            }
+            let dependencies = toList({
+                filename,
+                directory: rootPath,
+                filter: path => path.indexOf('node_modules') === -1,
+                nodeModulesConfig: {
+                    entry: 'module'
+                  },
+                tsConfig: {
+                    compilerOptions: {
+                        target: 'es2016',
+                        module: 'CommonJS',
+                        isolatedModules: true,
+                        allowSyntheticDefaultImports: true,
+                        noImplicitAny: false,
+                        suppressImplicitAnyIndexErrors: true,
+                        removeComments: true,
+                        jsx: 'react'
+                    },
+
+                    transpileOnly: true
+                }
+            });
+            dependencies.forEach(file => packageFilesSet.add(file));
+        }
     }
 
     for (let file of files) {
@@ -146,9 +179,12 @@ export function foilify(packagePath: string): Post {
 
     let foilFiles = buildFoilFiles(rootPath, packageFiles);
 
-    let dateModified = foilFiles.reduce((prev, cur) => (prev.modified > cur.modified ? prev : cur), {
-        modified: new Date('1970-01-01Z00:00:00:000')
-    }).modified;
+    let dateModified = foilFiles.reduce(
+        (prev, cur) => (prev.modified > cur.modified ? prev : cur),
+        {
+            modified: new Date('1970-01-01Z00:00:00:000')
+        }
+    ).modified;
 
     let foilModule = {
         ...foil,
@@ -182,7 +218,7 @@ export default async function builder(loaders: Loader[]) {
 
     // Find all package.json files
     let packages = find.fileSync(/\package.json$/, config.rootDir);
-    packages = packages.filter((cur) => !cur.match(/node_modules/));
+    packages = packages.filter(cur => !cur.match(/node_modules/));
 
     for (var pack of packages) {
         // Import package.json and set some defaults
@@ -193,7 +229,8 @@ export default async function builder(loaders: Loader[]) {
             console.log('⚪ Processing ' + pack + '\n');
             let shouldCompile = false;
 
-            var databaseFiles: { path: string; modified: Date }[] = await getDatabaseFiles(foil.rootPath);
+            var databaseFiles: { path: string; modified: Date }[] =
+                await getDatabaseFiles(foil.rootPath);
             shouldCompile = shouldCompile || databaseFiles.length < 1;
 
             //check if existing file has been modified
@@ -201,7 +238,8 @@ export default async function builder(loaders: Loader[]) {
                 if (fs.existsSync(databaseFile.path)) {
                     shouldCompile =
                         shouldCompile ||
-                        fs.statSync(databaseFile.path).mtime.getTime() !== databaseFile.modified.getTime();
+                        fs.statSync(databaseFile.path).mtime.getTime() !==
+                            databaseFile.modified.getTime();
                     if (shouldCompile) break;
                 }
             }
@@ -211,7 +249,8 @@ export default async function builder(loaders: Loader[]) {
                 for (let file of foil.files) {
                     let matchingFile = false;
                     for (let databaseFile of databaseFiles) {
-                        matchingFile = matchingFile || file.path == databaseFile.path;
+                        matchingFile =
+                            matchingFile || file.path == databaseFile.path;
                         if (matchingFile) break;
                     }
                     shouldCompile = shouldCompile || !matchingFile;
