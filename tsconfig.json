@@ -14,7 +14,8 @@
         "sourceMap": true,
         "strictNullChecks": false,
         "jsx": "react",
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true
     },
     "compileOnSave": false,
     "buildOnSave": false

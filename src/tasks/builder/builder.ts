@@ -186,13 +186,22 @@ export function foilify(packagePath: string): Post {
         }
     ).modified;
 
+    let sanitizedDatePublished = new Date(datePublished);
+    if( sanitizedDatePublished.getDate() === NaN)
+    {
+        console.warn("Provided date is invalid: "+ datePublished)
+        sanitizedDatePublished = new Date();
+    }
+
+    //TODO: rewrite package.json?
+
     let foilModule = {
         ...foil,
         description,
         authors,
         keywords,
         permalink,
-        datePublished: new Date(datePublished),
+        datePublished: sanitizedDatePublished,
         dateModified,
         cover,
         icon,

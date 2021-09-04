@@ -132,7 +132,11 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 'node_modules',
                 join(__dirname, '../../../../node_modules')
             ],
-            fallback: { crypto: false, fs: false, path: require.resolve("path-browserify") }
+            fallback: {
+                crypto: false,
+                fs: false,
+                path: require.resolve('path-browserify')
+            }
         },
         resolveLoader: {
             modules: [
@@ -167,7 +171,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                     }
                 },
                 {
-                    test: /\.wgsl/,
+                    test: /\.(wgsl|glsl)$/,
                     type: 'asset/source'
                 }
             ]
@@ -175,17 +179,17 @@ function compile(root: string, main: string, title: string, permalink: string) {
         node: false,
         plugins: [
             new WebpackSystemRegister({
-				systemjsDeps: [
-					'react',
-					'react-dom',
-					'react-router',
-					'react-router-dom',
-					'react-redux',
-					'redux-thunk',
-					'redux',
-					'main'
-				]
-			}),
+                systemjsDeps: [
+                    'react',
+                    'react-dom',
+                    'react-router',
+                    'react-router-dom',
+                    'react-redux',
+                    'redux-thunk',
+                    'redux',
+                    'main'
+                ]
+            }),
             new webpack.DefinePlugin({
                 'process.env': {
                     NODE_ENV: JSON.stringify(

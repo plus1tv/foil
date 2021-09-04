@@ -10,17 +10,15 @@
 [![Dependency Status][david-img]][david-url]
 [![devDependency Status][david-dev-img]][david-dev-url]
 
-
-
 </div>
 
 Whether you're a *writer, artist, musician, engineer, or all of the above*, this tool makes it easy and fast to showcase a variety of content.
 
 ## Features
 
-- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS!
+- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
 
-- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games or tools. Use JavaScript Modules for it all, and have it all automatically combine and transpile together for your post.
+- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games, demos, or tools. Use *JavaScript Modules* for it all, and have it all automatically combine and transpile together for your post.
 
 - 🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
 
@@ -34,25 +32,39 @@ Read about some of the *opinions* that guided its design over [here](docs/opinio
 
 ## How it Works
 
-### Foil Packages
+The Foil CLI is a tool to populate your backend database with data to be read by your frontend.
 
-Every Foil post starts with a [`package.json` file](https://docs.npmjs.com/files/package.json), just like any other Node module, but with the addition of the `foil` object that stores data not defined by [`package.json` specification](https://docs.npmjs.com/files/package.json):
+By default the CLI targets the current directory it's called from, and attempts to create portfolio items from any [`package.json` files](https://docs.npmjs.com/files/package.json) it finds within that directory that feature a `"foil"` key. This design is similar to authoring an extension to a text editor like [VS Code](https://code.visualstudio.com/api/references/extension-manifest).
+
+The schema for the "foil" object can be found in [`./foil.schema.json`](foil.schema.json).
+
+> You may want to map this schema to your portfolio folder for better auto-complete, [here's a guide to do this in VS Code](https://vscode.readthedocs.io/en/latest/languages/json/#mapping-to-a-schema-in-the-workspace).
 
 ```json
 {
-  "description": "A cross platform system abstraction library written in C++ for managing windows and performing OS tasks.",
-  "main": "main.tsx",
-  "keywords": [
-    "library",
-    "libraries",
-    "github",
-    "cpp"
-  ],
-  "foil": {
-    "title": "CrossWindow",
-    "permalink": "libraries/crosswindow",
-    "datePublished": "2018-09-16"
-  }
+    "description": "A WebGPU real time renderer of GLTF files.",
+    "files": [
+        "main.tsx"
+    ],
+    "main": "main.tsx",
+    "keywords": [
+        "demo",
+        "webgpu",
+        "gltf",
+    ],
+    "foil": {
+        "title": "WebGPU GLTF",
+        "permalink": "demos/webgpu-gltf",
+        "datePublished": "2021-08-22T00:00:00.000Z"
+    },
+    "devDependencies": {
+        "@webgpu/types": "^0.1.6"
+    },
+    "dependencies": {
+        "@loaders.gl/core": "^3.0.9",
+        "@loaders.gl/gltf": "^3.0.9",
+        "gl-matrix": "^3.3.0"
+    }
 }
 ```
 
