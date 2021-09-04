@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as find from 'find';
+import fs from 'fs';
+import path from 'path';
+import find from 'find';
 import { database } from '../../db';
 import { Collection } from 'mongodb';
 import { Post } from './types';

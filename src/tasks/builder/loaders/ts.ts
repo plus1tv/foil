@@ -1,5 +1,5 @@
 import { gray, yellow } from 'chalk';
-import * as webpack from 'webpack';
+import webpack from 'webpack';
 import WebpackSystemRegister from './webpack-system-register';
 import { exec } from 'child_process';
 import { statSync, exists, existsSync } from 'fs';
@@ -157,7 +157,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
                         compilerOptions: {
                             //module: 'ESNext',
                             isolatedModules: true,
-                            allowSyntheticDefaultImports: true
+                            allowSyntheticDefaultImports: true,
+                            esModuleInterop: true
                         }
                     }
                 },
