@@ -1,4 +1,4 @@
-import builder from './builder';
+import builder from '../../resolve-foils';
 import { ts, blog, book } from './loaders';
 
 /**
@@ -12,5 +12,5 @@ let loaders = [
 ]
 
 export async function build() {
-    await builder(loaders);
+    //await builder(loaders);
 };

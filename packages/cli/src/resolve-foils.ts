@@ -1,14 +1,13 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as find from 'find';
-import * as globToRegExp from 'glob-to-regexp';
-import { yellow } from 'chalk';
+import { isAbsolute, join } from 'path';
+import { existsSync, statSync } from 'fs';
+import { fileSync } from 'find';
+import globToRegExp from 'glob-to-regexp';
 import { toList } from 'dependency-tree';
 
-import { config } from '../../config';
+import { config } from './config';
 import { Post, Loader } from './types';
 
-import { getAsset, getDatabaseFiles, writeToDb } from './utils';
+import { getAsset, getDatabaseFiles, writeToDb } from './tasks/builder/utils';
 
 /**
  * Builds a list of foilfolio files. Used to check if a foilfolio entry has been updated.
@@ -16,14 +15,14 @@ import { getAsset, getDatabaseFiles, writeToDb } from './utils';
  * @param foilFiles A list of foilfolio file path / modified combo
  * @param otherFiles A list of path strings
  */
-export function buildFoilFiles(
+function buildFoilFiles(
     rootPath: string,
     otherFiles: string[],
     foilFiles: { path: string; modified: Date }[] = []
 ) {
     for (let m of otherFiles) {
-        if (!path.isAbsolute(m)) {
-            m = path.join(rootPath, m);
+        if (!isAbsolute(m)) {
+            m = join(rootPath, m);
         }
         m.replace(/\\/g, '/');
         let foilFile = {
@@ -31,9 +30,9 @@ export function buildFoilFiles(
             modified: new Date()
         };
 
-        if (fs.existsSync(m)) {
-            foilFile.modified = fs.statSync(m).mtime;
-            if (!fs.statSync(m).isDirectory()) {
+        if (existsSync(m)) {
+            foilFile.modified = statSync(m).mtime;
+            if (!statSync(m).isDirectory()) {
                 foilFiles.push(foilFile);
             }
         }
@@ -61,6 +60,7 @@ export function foilify(packagePath: string): Post {
         return null;
     }
 
+    // 🧔 Build list of Authors
     let authors = [];
 
     let checkAuthor = author => {
@@ -88,7 +88,6 @@ export function foilify(packagePath: string): Post {
         return curAuthor;
     };
 
-    // Build list of Authors
     if (contributors.length <= 0) authors.push(checkAuthor(author));
     else {
         for (let contributor of contributors) {
@@ -96,7 +95,9 @@ export function foilify(packagePath: string): Post {
         }
     }
 
-    let rootPath = path.join(packagePath, '..');
+    let rootPath = join(packagePath, '..');
+
+    // 🔗 Resolve permalink of post:
     let { permalink } = foil;
 
     if (!permalink) {
@@ -133,34 +134,40 @@ export function foilify(packagePath: string): Post {
 
     if (main) {
         packageFilesSet.add(main);
-        if (main.match(/\.tsx$/)) {
-            let filename = main;
-            if (!path.isAbsolute(filename)) {
-                filename = path.join(rootPath, filename);
-            }
-            let dependencies = toList({
-                filename,
-                directory: rootPath,
-                filter: path => path.indexOf('node_modules') === -1,
-                nodeModulesConfig: {
-                    entry: 'module'
-                  },
-                tsConfig: {
-                    compilerOptions: {
-                        target: 'es2016',
-                        module: 'CommonJS',
-                        isolatedModules: true,
-                        allowSyntheticDefaultImports: true,
-                        noImplicitAny: false,
-                        suppressImplicitAnyIndexErrors: true,
-                        removeComments: true,
-                        jsx: 'react'
-                    },
 
-                    transpileOnly: true
-                }
-            });
-            dependencies.forEach(file => packageFilesSet.add(file));
+        // 🔎 Resolve JavaScript dependencies of main file:
+        // This only applies to packages outside `node_modules`,
+        // While it can resolve `import` statements, CommonJS works best.
+        if (main.match(/\.(t|j)sx?$/)) {
+            let filename = main;
+            if (!isAbsolute(filename)) {
+                filename = join(rootPath, filename);
+            }
+            if (existsSync(filename)) {
+                let dependencies = toList({
+                    filename,
+                    directory: rootPath,
+                    filter: path => path.indexOf('node_modules') === -1,
+                    nodeModulesConfig: {
+                        entry: 'module'
+                    },
+                    tsConfig: {
+                        compilerOptions: {
+                            target: 'es2016',
+                            module: 'CommonJS',
+                            isolatedModules: true,
+                            allowSyntheticDefaultImports: true,
+                            noImplicitAny: false,
+                            suppressImplicitAnyIndexErrors: true,
+                            removeComments: true,
+                            jsx: 'react'
+                        },
+
+                        transpileOnly: true
+                    }
+                });
+                dependencies.forEach(file => packageFilesSet.add(file));
+            }
         }
     }
 
@@ -168,7 +175,7 @@ export function foilify(packagePath: string): Post {
         if (/\*/.exec(file) === null) {
             packageFilesSet.add(file);
         } else {
-            let otherFiles = find.fileSync(globToRegExp(file), config.rootDir);
+            let otherFiles = fileSync(globToRegExp(file), config.rootDir);
             for (let otherFile of otherFiles) {
                 packageFilesSet.add(otherFile);
             }
@@ -179,6 +186,7 @@ export function foilify(packagePath: string): Post {
 
     let foilFiles = buildFoilFiles(rootPath, packageFiles);
 
+    // 📅 Determine public/private modified dates, publish dates:
     let dateModified = foilFiles.reduce(
         (prev, cur) => (prev.modified > cur.modified ? prev : cur),
         {
@@ -186,14 +194,31 @@ export function foilify(packagePath: string): Post {
         }
     ).modified;
 
+    let { publicDateModifiedFiles = [] } = foil;
+    let publicDateModified = dateModified;
+    if (publicDateModifiedFiles.length > 0) {
+        publicDateModified = foilFiles.reduce(
+            (prev, cur) =>
+                prev.modified > cur.modified &&
+                publicDateModifiedFiles.reduce(
+                    (p, c) => p || new RegExp(c).test(cur.path),
+                    false
+                )
+                    ? prev
+                    : cur,
+            {
+                modified: new Date('1970-01-01Z00:00:00:000')
+            }
+        ).modified;
+    }
+
     let sanitizedDatePublished = new Date(datePublished);
-    if( sanitizedDatePublished.getDate() === NaN)
-    {
-        console.warn("Provided date is invalid: "+ datePublished)
+    if (sanitizedDatePublished.getDate() === NaN) {
+        console.warn('Provided date is invalid: ' + datePublished);
         sanitizedDatePublished = new Date();
     }
 
-    //TODO: rewrite package.json?
+    // Rewrite package.json if sanitized?
 
     let foilModule = {
         ...foil,
@@ -202,17 +227,20 @@ export function foilify(packagePath: string): Post {
         keywords,
         permalink,
         datePublished: sanitizedDatePublished,
-        dateModified,
+        dateModified: publicDateModified,
         cover,
         icon,
         main,
 
-        //dependent files
-        files: foilFiles,
+        meta: {
+            //dependent files
+            files: foilFiles,
+            dateModified,
 
-        //root path
-        rootPath,
-        rootPermalink
+            //root path
+            rootPath,
+            rootPermalink
+        }
     };
 
     return foilModule;
@@ -222,11 +250,11 @@ export function foilify(packagePath: string): Post {
  * Executes Alain.xyz's Package building system.
  * @param loaders An array of Loaders.
  */
-export default async function builder(loaders: Loader[]) {
-    console.log('🌟 ' + yellow('Foilfolio Package Builder\n'));
+export default async function resolveFoils() {
+    let foils = [];
 
     // Find all package.json files
-    let packages = find.fileSync(/\package.json$/, config.rootDir);
+    let packages = fileSync(/\package.json$/, config.rootDir);
     packages = packages.filter(cur => !cur.match(/node_modules/));
 
     for (var pack of packages) {
@@ -235,19 +263,18 @@ export default async function builder(loaders: Loader[]) {
 
         // If it's a foil module, compile it with loaders
         if (foil) {
-            console.log('⚪ Processing ' + pack + '\n');
             let shouldCompile = false;
 
             var databaseFiles: { path: string; modified: Date }[] =
-                await getDatabaseFiles(foil.rootPath);
+                await getDatabaseFiles(foil.meta.rootPath);
             shouldCompile = shouldCompile || databaseFiles.length < 1;
 
             //check if existing file has been modified
             for (let databaseFile of databaseFiles) {
-                if (fs.existsSync(databaseFile.path)) {
+                if (existsSync(databaseFile.path)) {
                     shouldCompile =
                         shouldCompile ||
-                        fs.statSync(databaseFile.path).mtime.getTime() !==
+                        statSync(databaseFile.path).mtime.getTime() !==
                             databaseFile.modified.getTime();
                     if (shouldCompile) break;
                 }
@@ -255,7 +282,7 @@ export default async function builder(loaders: Loader[]) {
 
             //check if there's any new files, or files that have been renamed
             if (!shouldCompile) {
-                for (let file of foil.files) {
+                for (let file of foil.meta.files) {
                     let matchingFile = false;
                     for (let databaseFile of databaseFiles) {
                         matchingFile =
@@ -267,35 +294,9 @@ export default async function builder(loaders: Loader[]) {
             }
 
             if (shouldCompile) {
-                let compiledModule = await compile(loaders, foil);
-                await writeToDb(compiledModule);
+                foils.push(foil);
             }
         }
     }
-}
-
-/**
- * Compiles foil module by waterfalling through loaders.
- * @param loaders A matching algorithm and a compiler function.
- * @param foilModule Current foil module.
- */
-async function compile(loaders: Loader[], foilModule: Post) {
-    // Check each loader for a match
-    for (let rule of loaders) {
-        // Perform deep comparison
-        let compare = Object.keys(rule.test).reduce((prev, cur) => {
-            let reg = new RegExp(rule.test[cur]);
-            return prev || reg.test(foilModule[cur]);
-        }, false);
-
-        if (compare) {
-            try {
-                foilModule = await rule.transform(foilModule);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-    }
-
-    return foilModule;
+    return foils;
 }

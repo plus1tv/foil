@@ -7,7 +7,7 @@ import { join, resolve, isAbsolute } from 'path';
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
 
-import { Loader } from '../types';
+import { Loader } from '../../../types';
 
 import { isProduction } from '../../../env';
 
@@ -20,11 +20,11 @@ export const ts: Loader = {
         // Get file path
         let file = foil.main;
         if (!isAbsolute(foil.main)) {
-            file = join(foil.rootPath, foil.main);
+            file = join(foil.meta.rootPath, foil.main);
         }
         file.replace(/\\/g, '/');
         let newFile = file.replace(/\.tsx?$/, '.js').replace(/\\/g, '/');
-        let newMain = join(foil.rootPermalink, foil.main)
+        let newMain = join(foil.meta.rootPermalink, foil.main)
             .replace(/\.tsx?$/, '.js')
             .replace(/\\/g, '/');
         // Check if main file has been updated or never existed.
@@ -32,12 +32,12 @@ export const ts: Loader = {
 
         if (updated) {
             let { dependencies, devDependencies } = require(join(
-                foil.rootPath,
+                foil.meta.rootPath,
                 'package.json'
             ));
             if (dependencies || devDependencies) {
                 // Update dependencies through `npm i`
-                await installDependencies(foil.rootPath);
+                await installDependencies(foil.meta.rootPath);
             }
             // Compile module with Webpack
             await compile(
@@ -49,8 +49,6 @@ export const ts: Loader = {
 
             // Update in Database
             await updateInDatabase(newFile, newMain, file);
-
-            //TODO: build foil.files array with all files resolved by webpack...
 
             let newFoil = {
                 ...foil,

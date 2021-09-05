@@ -3,7 +3,7 @@ import path from 'path';
 import find from 'find';
 import { database } from '../../db';
 import { Collection } from 'mongodb';
-import { Post } from './types';
+import { Post } from '../../types';
 
 /**
  * The following are various functions to get metadata 
@@ -39,8 +39,8 @@ export async function getDatabaseFiles(rootPath: string) {
                 let db = client.db('db');
                 var c = db.collection('portfolio');
 
-                // Check if the default permalink is in the database.
-                c.find({ rootPath }).toArray().then((d) => res(d)).catch((e) => rej(e));
+                // Check if this file exists in the database
+                c.find({ _meta: { rootPath } }).toArray().then((d) => res(d)).catch((e) => rej(e));
             })
             .catch((reason) => console.error(reason));
     });
@@ -62,14 +62,14 @@ export async function writeToDb(foil: Post) {
         let ignoredTypes = [ 'tsx', 'ts', 'scss', 'md', 'json', 'lock', 'db' ];
 
         var staticFiles = find
-            .fileSync(foil.rootPath)
+            .fileSync(foil.meta.rootPath)
             .filter(
                 (f) => !(ignoredTypes.reduce((prev, cur) => prev || f.endsWith(cur), false) || f.match(/node_modules|diary/))
             );
 
         // Add Static files to database
         for (var sf of staticFiles) {
-            var filePermalink = path.join(foil.rootPermalink, path.relative(foil.rootPath, sf)).replace(/\\/g, '/');
+            var filePermalink = path.join(foil.rootPermalink, path.relative(foil.meta.rootPath, sf)).replace(/\\/g, '/');
 
             let query = {
                 to: sf

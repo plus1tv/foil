@@ -1,7 +1,7 @@
 import markademic from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
-import { Loader } from '../types';
+import { Loader } from '../../../types';
 
 export let book: Loader = {
     test: { permalink: /^\/books\/|docs/ },

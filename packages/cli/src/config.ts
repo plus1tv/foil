@@ -4,9 +4,9 @@ import * as fs from 'fs';
 let config = {
     //default author
     author: {
-        name: 'Foil Folio',
-        email: 'hello@foilfoilio.com',
-        url: 'https://foilfolio.com'
+        name: 'Alain Galvan',
+        email: 'hi@alain.xyz',
+        url: 'https://alain.xyz/libraries/foil'
     },
 
     //default files

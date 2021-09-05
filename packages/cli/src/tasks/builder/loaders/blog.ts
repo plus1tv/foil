@@ -2,7 +2,7 @@ import markademic from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
 
-import { Loader } from '../types';
+import { Loader } from '../../../types';
 
 export let blog: Loader = {
     // 💉 a test object that's used to compare with the `package.json` file.

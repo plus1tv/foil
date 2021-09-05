@@ -22,8 +22,6 @@ Whether you're a *writer, artist, musician, engineer, or all of the above*, this
 
 - 🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
 
-- ⚔️ **State of the Art technologies**, [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), [Webpack](https://webpack.js.org/), [PostCSS](https://postcss.org/), and more. Write views in React, use 3D renderers like Marmoset Viewer, even render academic files written in Markdown + LaTeX, you'll find it all supported here.
-
 Read about some of the *opinions* that guided its design over [here](docs/opinions.md).
 
 ## Ecosystem

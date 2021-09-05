@@ -1,58 +1,19 @@
 {
-	"name": "foilfolio-cli",
+	"name": "foil",
 	"version": "1.0.0",
-	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
+	"description": "The Foil ecosystem monorepo.",
+	"scripts": {
+	  "init": "npm ci",
+	  "postinstall": "lerna bootstrap"
+	},
 	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/alaingalvan/foilfolio.git"
+	  "type": "git",
+	  "url": "https://github.com/alaingalvan/foil.git"
 	},
 	"author": "Alain Galvan <hi@alain.xyz>",
-	"license": "MIT",
-	"main": "./bin/cli.js",
-	"bin": {
-		"foilfolio-cli": "./bin/cli.js"
-	},
-	"engines": {
-		"node": ">=8"
-	},
-	"scripts": {
-		"start": "npm run build && npm link --force",
-		"build": "tsc",
-		"develop": "tsc -w"
-	},
-	"devDependencies": {
-		"@types/chalk": "^2.2.0",
-		"@types/mongodb": "^4.0.6",
-		"@types/node": "^16.7.8",
-		"@types/react": "^17.0.19",
-		"@types/react-redux": "^7.1.18",
-		"@types/react-router": "^5.1.16",
-		"@types/react-router-dom": "^5.1.8",
-		"@types/rss": "^0.0.29",
-		"@types/webpack": "^5.28.0",
-		"typescript": "4.4.2"
-	},
+	"license": "SEE LICENSE IN license.md",
 	"dependencies": {
-		"chalk": "^4.1.2",
-		"cross-env": "^7.0.3",
-		"dependency-tree": "^8.1.1",
-		"file-loader": "^6.2.0",
-		"find": "^0.3.0",
-		"glob-to-regexp": "^0.4.1",
-		"id3js": "^2.1.1",
-		"markademic": "^0.14.x",
-		"mongodb": "^4.1.1",
-		"path-browserify": "^1.0.1",
-		"rss": "^1.2.2",
-		"ts-loader": "^9.2.5",
-		"webpack": "^5.51.1",
-		"webpack-system-register": "^1.6.0"
-	},
-	"bugs": {
-		"url": "https://github.com/alaingalvan/foilfolio/issues"
-	},
-	"homepage": "https://github.com/alaingalvan/foilfolio#readme",
-	"directories": {
-		"doc": "docs"
+	  "lerna": "4.0.0"
 	}
-}
+  }
+  
