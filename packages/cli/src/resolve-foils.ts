@@ -5,9 +5,9 @@ import globToRegExp from 'glob-to-regexp';
 import { toList } from 'dependency-tree';
 
 import { config } from './config';
-import { Post, Loader } from './types';
+import { Post } from './types';
 
-import { getAsset, getDatabaseFiles, writeToDb } from './tasks/builder/utils';
+import { getAsset, getDatabaseFiles } from './tasks/builder/utils';
 
 /**
  * Builds a list of foilfolio files. Used to check if a foilfolio entry has been updated.
@@ -267,32 +267,34 @@ export default async function resolveFoils() {
 
             var databaseFiles: { path: string; modified: Date }[] =
                 await getDatabaseFiles(foil.meta.rootPath);
-            shouldCompile = shouldCompile || databaseFiles.length < 1;
-
-            //check if existing file has been modified
-            for (let databaseFile of databaseFiles) {
-                if (existsSync(databaseFile.path)) {
-                    shouldCompile =
-                        shouldCompile ||
-                        statSync(databaseFile.path).mtime.getTime() !==
-                            databaseFile.modified.getTime();
-                    if (shouldCompile) break;
-                }
-            }
-
-            //check if there's any new files, or files that have been renamed
+            shouldCompile =
+                shouldCompile || databaseFiles.length <= 0 ||
+                databaseFiles.length !== foil.meta.files.length;
             if (!shouldCompile) {
-                for (let file of foil.meta.files) {
-                    let matchingFile = false;
-                    for (let databaseFile of databaseFiles) {
-                        matchingFile =
-                            matchingFile || file.path == databaseFile.path;
-                        if (matchingFile) break;
+                //check if existing file has been modified
+                for (let databaseFile of databaseFiles) {
+                    if (existsSync(databaseFile.path)) {
+                        shouldCompile =
+                            shouldCompile ||
+                            statSync(databaseFile.path).mtime.getTime() !==
+                                databaseFile.modified.getTime();
+                        if (shouldCompile) break;
                     }
-                    shouldCompile = shouldCompile || !matchingFile;
+                }
+
+                //check if there's any new files, or files that have been renamed
+                if (!shouldCompile) {
+                    for (let file of foil.meta.files) {
+                        let matchingFile = false;
+                        for (let databaseFile of databaseFiles) {
+                            matchingFile =
+                                matchingFile || file.path == databaseFile.path;
+                            if (matchingFile) break;
+                        }
+                        shouldCompile = shouldCompile || !matchingFile;
+                    }
                 }
             }
-
             if (shouldCompile) {
                 foils.push(foil);
             }

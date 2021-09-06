@@ -40,7 +40,7 @@ export async function getDatabaseFiles(rootPath: string) {
                 var c = db.collection('portfolio');
 
                 // Check if this file exists in the database
-                c.find({ _meta: { rootPath } }).toArray().then((d) => res(d)).catch((e) => rej(e));
+                c.find({ meta: { rootPath } }).toArray().then((d) => res(d)).catch((e) => rej(e));
             })
             .catch((reason) => console.error(reason));
     });

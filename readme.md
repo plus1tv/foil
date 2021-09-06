@@ -16,7 +16,7 @@ Whether you're a *writer, artist, musician, engineer, or all of the above*, this
 
 ## Features
 
-- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
+- 🐙 **Git Powered** with a *daemon tool* to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
 
 - 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games, demos, or tools. Use *JavaScript Modules* for it all, and have it all automatically combine and transpile together for your post.
 
@@ -53,7 +53,7 @@ The schema for the "foil" object can be found in [`./foil.schema.json`](foil.sch
     "foil": {
         "title": "WebGPU GLTF",
         "permalink": "demos/webgpu-gltf",
-        "datePublished": "2021-08-22T00:00:00.000Z"
+        "datePublished": "09/02/2021 09:50 PM EST"
     },
     "devDependencies": {
         "@webgpu/types": "^0.1.6"
