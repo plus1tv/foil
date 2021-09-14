@@ -1,6 +1,5 @@
 import { gray, yellow } from 'chalk';
 import webpack from 'webpack';
-import WebpackSystemRegister from './webpack-system-register';
 import { exec } from 'child_process';
 import { statSync, exists, existsSync } from 'fs';
 import { join, resolve, isAbsolute } from 'path';
@@ -10,6 +9,18 @@ import { Collection } from 'mongodb';
 import { Loader } from '../types';
 
 import { isProduction } from '../../../env';
+
+const nodeEnvStr: any = isProduction ? 'production' : 'development';
+
+const publicVendorModules = [
+    'react',
+    'react/jsx-runtime',
+    'react-dom',
+    'react-router-dom',
+    'redux',
+    'react-redux',
+    'main'
+];
 
 export const ts: Loader = {
     test: {
@@ -116,13 +127,18 @@ function installDependencies(path: string) {
  */
 function compile(root: string, main: string, title: string, permalink: string) {
     let config: webpack.Configuration = {
+        mode: nodeEnvStr,
         context: resolve(root),
         entry: {
             main
         },
         output: {
             path: resolve(root),
-            filename: 'main.js'
+            filename: 'main.js',
+            libraryTarget: 'system',
+            library: {
+                type: 'system'
+            }
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
@@ -155,10 +171,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                     options: {
                         transpileOnly: true,
                         compilerOptions: {
-                            //module: 'ESNext',
-                            isolatedModules: true,
-                            allowSyntheticDefaultImports: true,
-                            esModuleInterop: true
+                            module: 'esnext'
                         }
                     }
                 },
@@ -178,24 +191,15 @@ function compile(root: string, main: string, title: string, permalink: string) {
             ]
         },
         node: false,
+        externalsType: 'system',
+        externals: publicVendorModules,
+        externalsPresets: {
+            web: true
+        },
         plugins: [
-            new WebpackSystemRegister({
-                systemjsDeps: [
-                    'react',
-                    'react-dom',
-                    'react-router',
-                    'react-router-dom',
-                    'react-redux',
-                    'redux-thunk',
-                    'redux',
-                    'main'
-                ]
-            }),
             new webpack.DefinePlugin({
                 'process.env': {
-                    NODE_ENV: JSON.stringify(
-                        isProduction ? 'production' : 'development'
-                    )
+                    NODE_ENV: JSON.stringify(nodeEnvStr)
                 }
             })
         ],

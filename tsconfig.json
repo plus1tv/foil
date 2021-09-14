@@ -13,10 +13,11 @@
         "noEmitHelpers": false,
         "sourceMap": true,
         "strictNullChecks": false,
-        "jsx": "react",
+        "jsx": "react-jsx",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "isolatedModules": true
     },
     "compileOnSave": false,
     "buildOnSave": false
