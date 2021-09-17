@@ -171,7 +171,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
                     options: {
                         transpileOnly: true,
                         compilerOptions: {
-                            module: 'esnext'
+                            module: 'esnext',
+                            sourceMap: !isProduction
                         }
                     }
                 },
@@ -203,6 +204,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 }
             })
         ],
+        devtool: isProduction ? undefined : 'inline-source-map',
         optimization: {
             minimize: isProduction ? true : false
         }
