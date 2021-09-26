@@ -9,8 +9,12 @@ let config = {
         url: 'https://alain.xyz/libraries/foil'
     },
 
+    tags: ['programming'],
+    cover: '',
+    description: '',
+
     //default files
-    files: [ 'assets/*' ],
+    files: ['assets/*'],
 
     redirects: [],
 
@@ -19,7 +23,7 @@ let config = {
 
 let jsonPath = path.join(path.resolve('.'), 'foilfolio.json');
 if (fs.existsSync(jsonPath)) {
-    console.log("⚙️ Found foilfolio.json file.")
+    console.log('⚙️ Found foilfolio.json file.');
     let newDefaults = require(jsonPath);
     config = { ...config, ...newDefaults };
 

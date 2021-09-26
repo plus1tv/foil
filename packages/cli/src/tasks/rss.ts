@@ -11,13 +11,13 @@ export async function rssFeed(_foils: Post[]) {
     let config = {
         title: 'Alain.xyz',
 
-        description: 'The portfolio of Alain Galván, Engineer @ Marmoset.',
+        description: Config.description,
 
         feed_url: Config.author.url + '/rss',
 
         site_url: Config.author.url,
 
-        image_url: 'https://alain.xyz/assets/brand/alaingalvan.jpg',
+        image_url: Config.cover,
 
         managingEditor: Config.author.name,
 
@@ -27,17 +27,7 @@ export async function rssFeed(_foils: Post[]) {
 
         language: 'English',
 
-        categories: [
-            'vulkan',
-            'c++',
-            'programming',
-            'graphics',
-            'opengl',
-            'metal',
-            'directx',
-            'research',
-            'algorithms'
-        ],
+        categories: Config.tags,
 
         pubDate: new Date(),
 
@@ -104,8 +94,8 @@ export async function rssFeed(_foils: Post[]) {
     // Generate file
     let xml = rss.xml();
 
-    // Place in `frontend/assets/rss.xml`
-    let p = join(Config.rootDir, '..', 'frontend', 'assets', 'rss.xml');
+    // Place in `<builddir>/rss.xml`
+    let p = join(Config.rootDir, 'rss.xml');
     try {
         writeFileSync(p, xml);
         console.log(
