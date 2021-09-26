@@ -14,7 +14,7 @@ export let blog: Loader = {
 
         // 🦜 Setup Markademic Compilation
         let mdFile = null;
-        for (let file of foil.files) {
+        for (let file of foil.meta.files) {
             if (/\.md$/.exec(file.path)) {
                 mdFile = file;
             }
@@ -30,7 +30,7 @@ export let blog: Loader = {
             rerouteLinks: (link) => join(foil.rootPermalink, link)
         };
 
-        let bibPath = join(foil.rootPath, 'bib.json');
+        let bibPath = join(foil.meta.rootPath, 'bib.json');
         if (existsSync(bibPath)) {
             console.log('Found Bibliography!');
             config['citations'] = require(bibPath);
@@ -40,13 +40,13 @@ export let blog: Loader = {
 
         // 🎧 Setup Audioblog Data (Optional)
         var audioFile = null;
-        for (let file of foil.files) {
+        for (let file of foil.meta.files) {
             if (/\.mp3$/.exec(file.path)) {
-                audioFile = file.path.substr(foil.rootPath.length).replace(/\\/g, '/');
+                audioFile = file.path.substr(foil.meta.rootPath.length).replace(/\\/g, '/');
             }
         }
         var captions: { time: number; highlight: { begin: number; end: number }[] }[] = [];
-        var captionsPath = join(foil.rootPath, 'captions.json');
+        var captionsPath = join(foil.meta.rootPath, 'captions.json');
         if (existsSync(captionsPath)) {
             captions = require(captionsPath).captions;
             if (Array.isArray(captions)) {

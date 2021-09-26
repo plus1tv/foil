@@ -14,7 +14,7 @@ export let book: Loader = {
 
         // Get Table of Contents (summary/toc/table-of-contents.md)
         let toc = null;
-        for (let file of foil.files) {
+        for (let file of foil.meta.files) {
             if (/(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null) {
                 toc = file;
                 break;
@@ -98,7 +98,7 @@ export let book: Loader = {
         for (let child of navStructure) {
             let isFile = /\.[^/.]+$/.exec(child.link);
             let isPath = /(\/|\\)$/.exec(child.link);
-            let filePath = join(foil.rootPath, child.link);
+            let filePath = join(foil.meta.rootPath, child.link);
             if (isFile) {
                 // raw-vulkan/ch1-introduction.md
                 child.link = child.link.replace(/\.[^/.]+$/, '');
@@ -118,7 +118,7 @@ export let book: Loader = {
                 filePath += '.md';
             }
             let citations = null;
-            let bibPath = join(foil.rootPath, 'bib.json');
+            let bibPath = join(foil.meta.rootPath, 'bib.json');
             let localBibPath = join(filePath, isFile ? '..' : '', 'bib.json');
             if (existsSync(bibPath)) {
                 citations = require(bibPath);
