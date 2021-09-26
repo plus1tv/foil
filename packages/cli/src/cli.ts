@@ -5,20 +5,24 @@
  * 📚 Populate your database with relevant metadata from your portfolio.
  */
 
-import { red, cyan, green, gray } from 'chalk';
+import { cyan, gray } from 'chalk';
 import { isProduction, isWatch } from './env';
 import { version } from '../package.json';
+
+console.log(
+    cyan('✨ Foil v' + version) +
+        gray(isProduction ? ' (production)' : ' (development)')
+);
+
+// 🏁 Let's get started...
+
 import { config } from './config';
 import resolveFoils from './resolve-foils';
 import { Watcher } from './watcher';
 import { Runner } from './runner';
-
 import { Post } from './types';
+
 export async function foil() {
-    console.log(
-        cyan('✨ Foil v' + version) +
-            gray(isProduction ? ' (production)' : ' (development)')
-    );
     console.log('👋 Hi ' + config.author.name + '!');
 
     // 📃 Gather all modified Foil modules

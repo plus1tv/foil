@@ -10,7 +10,7 @@ export let blog: Loader = {
 
     // 🚒 the function that takes in the package data and lets you modify it.
     transform: async (foil) => {
-        console.log('📝 Blog Transformer\n');
+        console.log('📝 Blog Transformer: \n');
 
         // 🦜 Setup Markademic Compilation
         let mdFile = null;
@@ -32,7 +32,7 @@ export let blog: Loader = {
 
         let bibPath = join(foil.meta.rootPath, 'bib.json');
         if (existsSync(bibPath)) {
-            console.log('Found Bibliography!');
+            console.log('📚 Found bibliography.');
             config['citations'] = require(bibPath);
         }
 

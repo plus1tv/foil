@@ -45,8 +45,7 @@
 		"path-browserify": "^1.0.1",
 		"rss": "^1.2.2",
 		"ts-loader": "^9.2.5",
-		"webpack": "^5.51.1",
-		"webpack-system-register": "^1.6.0"
+		"webpack": "^5.51.1"
 	},
 	"bugs": {
 		"url": "https://github.com/alaingalvan/foil/issues"

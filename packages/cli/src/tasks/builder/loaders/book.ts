@@ -6,7 +6,7 @@ import { Loader } from '../../../types';
 export let book: Loader = {
     test: { permalink: /^\/books\/|docs/ },
     transform: async (foil) => {
-        console.log('📚 Book Transformer\n');
+        console.log('📚 Book Transformer: \n');
 
         type NavStructure = { text: string; link: string; children: NavStructure[] };
         let navStructure: NavStructure[] = [];

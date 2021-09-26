@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { yellow } from 'chalk';
 
 import { getAsset, getDatabaseFiles, writeToDb } from './utils';
 import { ts, blog, book } from './loaders';
@@ -39,41 +40,12 @@ export async function build(foils: Post[]) {
     for (var foil of foils) {
         // If it's a foil module, compile it with loaders
         if (foil) {
-            console.log('⚪ Processing ' + foil.meta.rootPath + '\n');
-            let shouldCompile = false;
+            console.log(
+                '⚪ Processing ' + yellow(`'${foil.permalink}'`) + ':\n'
+            );
 
-            var databaseFiles: { path: string; modified: Date }[] =
-                await getDatabaseFiles(foil.meta.rootPath);
-            shouldCompile = shouldCompile || databaseFiles.length < 1;
-
-            //check if existing file has been modified
-            for (let databaseFile of databaseFiles) {
-                if (fs.existsSync(databaseFile.path)) {
-                    shouldCompile =
-                        shouldCompile ||
-                        fs.statSync(databaseFile.path).mtime.getTime() !==
-                            databaseFile.modified.getTime();
-                    if (shouldCompile) break;
-                }
-            }
-
-            //check if there's any new files, or files that have been renamed
-            if (!shouldCompile) {
-                for (let file of foil.meta.files) {
-                    let matchingFile = false;
-                    for (let databaseFile of databaseFiles) {
-                        matchingFile =
-                            matchingFile || file.path == databaseFile.path;
-                        if (matchingFile) break;
-                    }
-                    shouldCompile = shouldCompile || !matchingFile;
-                }
-            }
-
-            if (shouldCompile) {
-                let compiledModule = await compile(loaders, foil);
-                await writeToDb(compiledModule);
-            }
+            let compiledModule = await compile(loaders, foil);
+            await writeToDb(compiledModule);
         }
     }
 }

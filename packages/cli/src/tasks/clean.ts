@@ -1,4 +1,5 @@
 import { stat } from 'fs';
+import { cyan } from 'chalk';
 import { Collection } from 'mongodb';
 import { database } from '../db';
 import { basename } from 'path';
@@ -7,7 +8,7 @@ import { Post } from '../types';
  * Run through every indexed file and portfolio item to see if it still exists.
  */
 export async function clean(_foils: Post[]) {
-    console.log('🌊 Foil Database Cleaner\n');
+    console.log('🌊 Foil Database Cleaner: \n');
     await database.then(async client => {
         let db = client.db('db');
         var redirectCol = db.collection('redirect');
@@ -74,8 +75,8 @@ export async function clean(_foils: Post[]) {
         //delete stale database entries (permalink redirecting)
 
         await cleanFiles(redirectCol);
-        console.log('✨ Cleaned files collection.');
+        console.log(`🧼 Cleaned ${cyan("'files'")} collection.`);
         await cleanFiles(portfolioCol);
-        console.log('✨ Cleaned portfolio collection.');
+        console.log(`🧼 Cleaned ${cyan("'portfolio'")} collection.`);
     });
 }

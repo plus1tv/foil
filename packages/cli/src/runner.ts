@@ -9,16 +9,16 @@ export class Runner {
         for (var i = 0; i < scripts.length; i++) {
             let progress = `(${i + 1}/${scripts.length})`;
 
-            console.log(`\n👟 ${gray(` Running Task ${progress}...`)}\n`);
+            console.log(`👟 ${gray(` Running Task ${progress}...`)}\n`);
 
             await scripts[i](foils)
                 .then(_ => {
                     console.log(
-                        `\n✔️️ ${green(` Finished Task ${progress}!`)}\n`
+                        `\n✔️️ ${green(` Finished Task ${progress}!`)}`
                     );
                 })
                 .catch(err => {
-                    console.log(`\n❌ ${red(` Failed Task ${progress}!`)}\n`);
+                    console.log(`\n❌ ${red(` Failed Task ${progress}!`)}`);
                     console.error(err);
                 });
         }

@@ -1,10 +1,11 @@
 import { gray, yellow } from 'chalk';
 import webpack from 'webpack';
 import { exec } from 'child_process';
-import { statSync, exists, existsSync } from 'fs';
+import { statSync, existsSync } from 'fs';
 import { join, resolve, isAbsolute } from 'path';
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
+import { config as Config } from '../../../config';
 
 import { Loader } from '../../../types';
 
@@ -27,7 +28,6 @@ export const ts: Loader = {
         main: /\.tsx?$/
     },
     transform: async foil => {
-        console.log('💙 TypeScript Transformer\n');
         // Get file path
         let file = foil.main;
         if (!isAbsolute(foil.main)) {
@@ -38,10 +38,12 @@ export const ts: Loader = {
         let newMain = join(foil.rootPermalink, foil.main)
             .replace(/\.tsx?$/, '.js')
             .replace(/\\/g, '/');
+
         // Check if main file has been updated or never existed.
-        let updated = checkUpdated(newFile);
+        let updated = await checkUpdated(newFile);
 
         if (updated) {
+            console.log('🟦 TypeScript Transformer: \n');
             let { dependencies, devDependencies } = require(join(
                 foil.meta.rootPath,
                 'package.json'
@@ -143,8 +145,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                'node_modules',
-                join(__dirname, '../../../../node_modules')
+                join(Config.rootDir, 'node_modules'),
+                'node_modules'
             ],
             fallback: {
                 crypto: false,
@@ -156,8 +158,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                'node_modules',
-                join(__dirname, '../../../../node_modules')
+                join(Config.rootDir, 'node_modules'),
+                'node_modules'
             ]
         },
         module: {
@@ -211,8 +213,6 @@ function compile(root: string, main: string, title: string, permalink: string) {
     console.log(`  🔨 Building Module '${title}'\n  ... `);
 
     var compiler: webpack.Compiler = webpack(config);
-
-    //TODO: get imports resolved by webpack, put them in foilfolio post
 
     return new Promise<any>((res, rej) =>
         compiler.run((err, stats) => {

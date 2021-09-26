@@ -1,6 +1,5 @@
 declare module 'main';
 declare module 'chalk';
-declare module 'webpack-system-register';
 
 declare module 'id3js' {
   type ITags = {

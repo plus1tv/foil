@@ -194,7 +194,8 @@ export function foilify(packagePath: string): Post {
         }
     ).modified;
 
-    let { publicDateModifiedFiles = [] } = foil;
+    // If there's a blog file, we'll use that file as the public modified date.
+    let { publicDateModifiedFiles = ['.md$'] } = foil;
     let publicDateModified = dateModified;
     if (publicDateModifiedFiles.length > 0) {
         publicDateModified = foilFiles.reduce(
@@ -211,10 +212,16 @@ export function foilify(packagePath: string): Post {
             }
         ).modified;
     }
+    if (publicDateModified === new Date('1970-01-01Z00:00:00:000')) {
+        publicDateModified = dateModified;
+    }
 
     let sanitizedDatePublished = new Date(datePublished);
     if (sanitizedDatePublished.getDate() === NaN) {
-        console.warn('Provided date is invalid: ' + datePublished);
+        console.warn(
+            '📅 Provided publish date is invalid, replacing with today: ' +
+                datePublished
+        );
         sanitizedDatePublished = new Date();
     }
 
@@ -226,6 +233,7 @@ export function foilify(packagePath: string): Post {
         authors,
         keywords,
         permalink,
+        rootPermalink,
         datePublished: sanitizedDatePublished,
         dateModified: publicDateModified,
         cover,
@@ -233,13 +241,14 @@ export function foilify(packagePath: string): Post {
         main,
 
         meta: {
-            //dependent files
+            // Dependent files
             files: foilFiles,
+
+            // Private Date Modified
             dateModified,
 
-            //root path
-            rootPath,
-            rootPermalink
+            // Root path
+            rootPath
         }
     };
 
@@ -268,7 +277,8 @@ export default async function resolveFoils() {
             var databaseFiles: { path: string; modified: Date }[] =
                 await getDatabaseFiles(foil.meta.rootPath);
             shouldCompile =
-                shouldCompile || databaseFiles.length <= 0 ||
+                shouldCompile ||
+                databaseFiles.length <= 0 ||
                 databaseFiles.length !== foil.meta.files.length;
             if (!shouldCompile) {
                 //check if existing file has been modified
