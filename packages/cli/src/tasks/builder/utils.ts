@@ -39,7 +39,7 @@ export async function getDatabaseFiles(rootPath: string) {
                 let db = client.db('db');
                 var c = db.collection('portfolio');
 
-                // Check if this file exists in the database
+                // Check if the default permalink is in the database.
                 c.find({ meta: { rootPath } }).toArray().then((d) => res(d)).catch((e) => rej(e));
             })
             .catch((reason) => console.error(reason));

@@ -1,13 +1,14 @@
-import * as fs from 'fs';
 import { Collection } from 'mongodb';
 import { database } from '../db';
 import { config } from '../config';
+import { Post } from '../types';
+
 /**
- * Run through every indexed file and portfolio item to see if it still exists. 
+ * Run through every indexed file and portfolio item to see if it still exists.
  */
-export async function redirects() {
+export async function redirects(_foils: Post[]) {
     console.log('🏹 Foil Database Redirects\n');
-    await database.then(async (client) => {
+    await database.then(async client => {
         // Add redirects
         let db = client.db('db');
         var redirectCollection: Collection = db.collection('redirect');
@@ -23,9 +24,15 @@ export async function redirects() {
                 };
 
                 await redirectCollection
-                    .updateOne(query, { $set: { to: rd.to, from: rd.from } }, options)
-                    .then((r) => console.log(`Redirecting ${rd.from} to ${rd.to}.`))
-                    .catch((e) => console.log(e));
+                    .updateOne(
+                        query,
+                        { $set: { to: rd.to, from: rd.from } },
+                        options
+                    )
+                    .then(r =>
+                        console.log(`Redirecting ${rd.from} to ${rd.to}.`)
+                    )
+                    .catch(e => console.log(e));
             }
         }
 
