@@ -4,13 +4,13 @@
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alaingalvan/foil.git"
+		"url": "git+https://github.com/plus1tv/foil.git"
 	},
 	"author": "Alain Galvan <hi@alain.xyz>",
 	"license": "MIT",
-	"main": "./bin/cli.js",
+	"main": "./bin/src/cli.js",
 	"bin": {
-		"foil-cli": "./bin/cli.js"
+		"foil-cli": "./bin/src/cli.js"
 	},
 	"engines": {
 		"node": ">=8"

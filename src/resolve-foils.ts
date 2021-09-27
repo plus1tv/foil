@@ -196,21 +196,20 @@ export function foilify(packagePath: string): Post {
 
     // If there's a blog file, we'll use that file as the public modified date.
     let { publicDateModifiedFiles = ['.md$'] } = foil;
-    let publicDateModified = dateModified;
+    let publicDateModified = new Date('1970-01-01Z00:00:00:000');
     if (publicDateModifiedFiles.length > 0) {
-        publicDateModified = foilFiles.reduce(
-            (prev, cur) =>
-                prev.modified > cur.modified &&
+        for (let cur of foilFiles) {
+            if (
                 publicDateModifiedFiles.reduce(
                     (p, c) => p || new RegExp(c).test(cur.path),
                     false
                 )
-                    ? prev
-                    : cur,
-            {
-                modified: new Date('1970-01-01Z00:00:00:000')
+            ) {
+                if (publicDateModified > cur.modified) {
+                    publicDateModified = cur.modified;
+                }
             }
-        ).modified;
+        }
     }
     if (publicDateModified === new Date('1970-01-01Z00:00:00:000')) {
         publicDateModified = dateModified;
