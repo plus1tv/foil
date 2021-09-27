@@ -205,13 +205,13 @@ export function foilify(packagePath: string): Post {
                     false
                 )
             ) {
-                if (publicDateModified > cur.modified) {
+                if (publicDateModified < cur.modified) {
                     publicDateModified = cur.modified;
                 }
             }
         }
     }
-    if (publicDateModified === new Date('1970-01-01Z00:00:00:000')) {
+    if (publicDateModified <= new Date('1970-01-02Z00:00:00:000')) {
         publicDateModified = dateModified;
     }
 
