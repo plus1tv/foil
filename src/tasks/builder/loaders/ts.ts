@@ -41,7 +41,7 @@ export const ts: Loader = {
             .replace(/\\/g, '/');
 
         // Check if main file has been updated or never existed.
-        let updated = await checkUpdated(newFile);
+        let updated = await checkUpdated(file);
 
         if (updated) {
             console.log('🟦 TypeScript Transformer:');
@@ -83,12 +83,16 @@ async function checkUpdated(path: string) {
     return await database.then(async client => {
         let db = client.db('db');
         // Check redirect collection to see if file at path exists.
-        let collection = db.collection('redirect');
+        let collection = db.collection('portfolio');
 
         let foundItems = await collection
             .find({
-                to: path
+                'meta.files.path': path
             })
+            .project({
+                'meta.files': 1
+            })
+
             .limit(1)
             .toArray();
 
@@ -100,10 +104,15 @@ async function checkUpdated(path: string) {
                 return true;
             }
             var { mtime } = statSync(path);
-            return (
-                mtime.getDate() ===
-                new Date(foundItems[0].dateModified).getDate()
-            );
+            for (let file of foundItems[0].meta.files) {
+                if (file.path === path) {
+                    return (
+                        mtime.getDate() ===
+                        new Date(file.modified).getDate()
+                    );
+                }
+            }
+            return true;
         }
     });
 }
