@@ -156,7 +156,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 root,
                 join(root, 'node_modules'),
                 join(Config.currentDir, 'node_modules'),
-                join(Config.foilCliRoot, 'node_modules'),
+                join(Config.foilCliRoot, '..', 'node_modules'),
                 'node_modules'
             ],
             fallback: {
@@ -170,7 +170,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 root,
                 join(root, 'node_modules'),
                 join(Config.currentDir, 'node_modules'),
-                join(Config.foilCliRoot, 'node_modules'),
+                join(Config.foilCliRoot, '..', 'node_modules'),
                 'node_modules'
             ]
         },
