@@ -175,7 +175,7 @@ export function foilify(packagePath: string): Post {
         if (/\*/.exec(file) === null) {
             packageFilesSet.add(file);
         } else {
-            let otherFiles = fileSync(globToRegExp(file), config.rootDir);
+            let otherFiles = fileSync(globToRegExp(file), config.currentDir);
             for (let otherFile of otherFiles) {
                 packageFilesSet.add(otherFile);
             }
@@ -263,7 +263,7 @@ export default async function resolveFoils() {
     let foils = [];
 
     // Find all package.json files
-    let packages = fileSync(/\package.json$/, config.rootDir);
+    let packages = fileSync(/\package.json$/, config.currentDir);
     packages = packages.filter(cur => !cur.match(/node_modules/));
 
     for (var pack of packages) {

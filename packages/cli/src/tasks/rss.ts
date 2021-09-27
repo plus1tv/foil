@@ -94,8 +94,8 @@ export async function rssFeed(_foils: Post[]) {
     // Generate file
     let xml = rss.xml();
 
-    // Place in `<builddir>/rss.xml`
-    let p = join(Config.rootDir, 'rss.xml');
+    // Place in `<build_dir>/rss.xml`
+    let p = join(Config.currentDir, 'rss.xml');
     try {
         writeFileSync(p, xml);
         console.log(

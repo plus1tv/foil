@@ -8,7 +8,7 @@ import { Post } from '../types';
  * Run through every indexed file and portfolio item to see if it still exists.
  */
 export async function clean(_foils: Post[]) {
-    console.log('🌊 Foil Database Cleaner: \n');
+    console.log('🌊 Foil Database Cleaner:');
     await database.then(async client => {
         let db = client.db('db');
         var redirectCol = db.collection('redirect');
@@ -23,14 +23,14 @@ export async function clean(_foils: Post[]) {
                     if (res)
                         for (var f of res) {
                             let { _id, permalink = null } = f;
-                            let files = f.to ? [{ path: f.to }] : f.files;
+                            let files = f.to ? [{ path: f.to }] : f.meta.files;
                             for (let file of files) {
                                 //Should we delete this entry?
                                 let deleteThis = () => {
                                     col.deleteOne({ _id })
                                         .catch(err => console.error(err))
                                         .then(() =>
-                                            console.log('Removed ' + file.path)
+                                            console.log('❌ Removed ' + file.path)
                                         );
                                 };
 

@@ -36,10 +36,12 @@ export async function foil() {
         // 👓 Watch for changes
         const watcher = new Watcher();
         await watcher.watch(foils);
-    } else {
+    } else if (foils.length > 0) {
         // 🏃‍♂️ Run once
         const runner = new Runner();
         await runner.run(foils);
+    } else {
+        console.log(gray('👍 No changes found, exiting.'));
     }
 
     return process.exit();

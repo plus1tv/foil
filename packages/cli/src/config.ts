@@ -25,7 +25,10 @@ let config = {
     redirects: [],
 
     // The current directory for searching for foil modules.
-    rootDir: resolve('.')
+    currentDir: resolve('.'),
+
+    // Foil CLI Root
+    foilCliRoot: resolve(join(__dirname, '..'))
 };
 
 let jsonPath = join(resolve('.'), 'foil.json');
@@ -34,8 +37,8 @@ if (existsSync(jsonPath)) {
     let newDefaults = require(jsonPath);
     config = { ...config, ...newDefaults };
 
-    if (!isAbsolute(config.rootDir)) {
-        config.rootDir = join(resolve('.'), config.rootDir);
+    if (!isAbsolute(config.currentDir)) {
+        config.currentDir = join(resolve('.'), config.currentDir);
     }
 }
 

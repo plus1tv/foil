@@ -32,16 +32,16 @@ async function compile(loaders: Loader[], foilModule: Post) {
             }
         }
     }
-
     return foilModule;
 }
 
 export async function build(foils: Post[]) {
+    console.log('📦 Foil Database Builder:');
     for (var foil of foils) {
         // If it's a foil module, compile it with loaders
         if (foil) {
             console.log(
-                '⚪ Processing ' + yellow(`'${foil.permalink}'`) + ':\n'
+                '⚪ Processing ' + yellow(`'${foil.permalink}'`) + ':'
             );
 
             let compiledModule = await compile(loaders, foil);

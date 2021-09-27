@@ -10,6 +10,7 @@ import { config as Config } from '../../../config';
 import { Loader } from '../../../types';
 
 import { isProduction } from '../../../env';
+import { cyan } from 'chalk';
 
 const nodeEnvStr: any = isProduction ? 'production' : 'development';
 
@@ -43,7 +44,7 @@ export const ts: Loader = {
         let updated = await checkUpdated(newFile);
 
         if (updated) {
-            console.log('🟦 TypeScript Transformer: \n');
+            console.log('🟦 TypeScript Transformer:');
             let { dependencies, devDependencies } = require(join(
                 foil.meta.rootPath,
                 'package.json'
@@ -56,7 +57,7 @@ export const ts: Loader = {
             await compile(
                 join(newFile, '..'),
                 './main',
-                foil.title,
+                newMain,
                 foil.rootPermalink
             );
 
@@ -115,7 +116,7 @@ function installDependencies(path: string) {
     // Run package manager, install local node_modules
     return new Promise((res, rej) => {
         exec('npm i', { cwd: path }, (err, stdout, _) => {
-            console.log('Installing dependencies at %s', path);
+            console.log('📦 Installing dependencies via NPM.', path);
             if (err) rej(err);
             else res(stdout);
         });
@@ -145,7 +146,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                join(Config.rootDir, 'node_modules'),
+                join(Config.currentDir, 'node_modules'),
+                join(Config.foilCliRoot, 'node_modules'),
                 'node_modules'
             ],
             fallback: {
@@ -158,7 +160,8 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                join(Config.rootDir, 'node_modules'),
+                join(Config.currentDir, 'node_modules'),
+                join(Config.foilCliRoot, 'node_modules'),
                 'node_modules'
             ]
         },
@@ -210,7 +213,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
         }
     };
 
-    console.log(`  🔨 Building Module '${title}'\n  ... `);
+    console.log(`🔨 Building Module '${cyan(title)}'`);
 
     var compiler: webpack.Compiler = webpack(config);
 
@@ -235,7 +238,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 );
             }
             console.log(
-                '  Done in %s ms!\n',
+                '🟨 Done in %s ms!\n',
                 +stats.endTime - +stats.startTime
             );
         })
@@ -269,10 +272,6 @@ function updateInDatabase(file: string, permalink: string, oldFile: string) {
 
         filesCollection.updateOne(query, { $set: update }, options);
 
-        console.log(
-            gray(
-                `    Indexing Build: \n    file: ${file}\n    permalink: ${permalink}\n`
-            )
-        );
+        console.log(gray(`📒 Indexed ${yellow(permalink)}`));
     });
 }

@@ -22,9 +22,11 @@ export let book: Loader = {
         }
         if (!toc) {
             throw new Error(
-                'Foilfolio book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
+                'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
             );
         }
+
+        // TODO: We should generate "sub-foils" from this page, individual modules that correspond to this foil package...
 
         // Traverse Table of Contents to build navigation map
         let tocString = readFileSync(toc.path).toString();

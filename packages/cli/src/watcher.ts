@@ -17,12 +17,12 @@ enum WatcherState {
 export class Watcher {
     watch = async (startFoils: Post[]) => {
         // Find all package.json files
-        let packages = fileSync(/\package.json$/, config.rootDir);
+        let packages = fileSync(/\package.json$/, config.currentDir);
         packages = packages.filter(cur => !cur.match(/node_modules/));
         let state = WatcherState.Initial;
         process.nextTick(() => {
             //🔎 watch for changes:
-            config.rootDir;
+            config.currentDir;
 
             // 🏃‍♂️ Try running tasks if these's a change in resolved foils and compiler's not busy.
 
