@@ -1,12 +1,12 @@
 import markademic from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
-import { Loader } from '../types';
+import { Loader } from '../../../types';
 
 export let book: Loader = {
     test: { permalink: /^\/books\/|docs/ },
     transform: async (foil) => {
-        console.log('📚 Book Transformer\n');
+        console.log('📚 Book Transformer: \n');
 
         type NavStructure = { text: string; link: string; children: NavStructure[] };
         let navStructure: NavStructure[] = [];
@@ -14,7 +14,7 @@ export let book: Loader = {
 
         // Get Table of Contents (summary/toc/table-of-contents.md)
         let toc = null;
-        for (let file of foil.files) {
+        for (let file of foil.meta.files) {
             if (/(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null) {
                 toc = file;
                 break;
@@ -22,9 +22,11 @@ export let book: Loader = {
         }
         if (!toc) {
             throw new Error(
-                'Foilfolio book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
+                'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
             );
         }
+
+        // TODO: We should generate "sub-foils" from this page, individual modules that correspond to this foil package...
 
         // Traverse Table of Contents to build navigation map
         let tocString = readFileSync(toc.path).toString();
@@ -98,7 +100,7 @@ export let book: Loader = {
         for (let child of navStructure) {
             let isFile = /\.[^/.]+$/.exec(child.link);
             let isPath = /(\/|\\)$/.exec(child.link);
-            let filePath = join(foil.rootPath, child.link);
+            let filePath = join(foil.meta.rootPath, child.link);
             if (isFile) {
                 // raw-vulkan/ch1-introduction.md
                 child.link = child.link.replace(/\.[^/.]+$/, '');
@@ -118,7 +120,7 @@ export let book: Loader = {
                 filePath += '.md';
             }
             let citations = null;
-            let bibPath = join(foil.rootPath, 'bib.json');
+            let bibPath = join(foil.meta.rootPath, 'bib.json');
             let localBibPath = join(filePath, isFile ? '..' : '', 'bib.json');
             if (existsSync(bibPath)) {
                 citations = require(bibPath);

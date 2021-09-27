@@ -1,16 +1,16 @@
 {
-	"name": "foilfolio-cli",
-	"version": "0.3.0",
+	"name": "foil-cli",
+	"version": "1.0.0-alpha.0",
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/alaingalvan/foilfolio.git"
+		"url": "git+https://github.com/plus1tv/foil.git"
 	},
 	"author": "Alain Galvan <hi@alain.xyz>",
 	"license": "MIT",
-	"main": "./bin/cli.js",
+	"main": "./bin/src/cli.js",
 	"bin": {
-		"foilfolio-cli": "./bin/cli.js"
+		"foil-cli": "./bin/src/cli.js"
 	},
 	"engines": {
 		"node": ">=8"
@@ -23,11 +23,11 @@
 	"devDependencies": {
 		"@types/chalk": "^2.2.0",
 		"@types/mongodb": "^4.0.6",
-		"@types/node": "^16.9.1",
-		"@types/react": "^17.0.20",
+		"@types/node": "^16.10.1",
+		"@types/react": "^17.0.24",
 		"@types/react-redux": "^7.1.18",
 		"@types/react-router": "^5.1.16",
-		"@types/react-router-dom": "^5.1.8",
+		"@types/react-router-dom": "^5.3.0",
 		"@types/rss": "^0.0.29",
 		"@types/webpack": "^5.28.0",
 		"typescript": "4.4.3"
@@ -41,17 +41,16 @@
 		"glob-to-regexp": "^0.4.1",
 		"id3js": "^2.1.1",
 		"markademic": "^0.14.x",
-		"mongodb": "^4.1.1",
+		"mongodb": "^4.1.2",
 		"path-browserify": "^1.0.1",
 		"rss": "^1.2.2",
-		"ts-loader": "^9.2.5",
-		"webpack": "^5.52.1",
-		"webpack-system-register": "^1.6.0"
+		"ts-loader": "^9.2.6",
+		"webpack": "^5.54.0"
 	},
 	"bugs": {
-		"url": "https://github.com/alaingalvan/foilfolio/issues"
+		"url": "https://github.com/alaingalvan/foil/issues"
 	},
-	"homepage": "https://github.com/alaingalvan/foilfolio#readme",
+	"homepage": "https://github.com/alaingalvan/foil#readme",
 	"directories": {
 		"doc": "docs"
 	}

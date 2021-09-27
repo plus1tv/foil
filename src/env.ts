@@ -5,4 +5,6 @@ let isProduction =
     (env && env.match(/production/)) ||
     argv.reduce((prev, cur) => prev || cur === '--production', false);
 
-export { isProduction };
+let isWatch = argv.reduce((prev, cur) => prev || cur === '--watch', false);
+
+export { isProduction, isWatch };

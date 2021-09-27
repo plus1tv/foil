@@ -1,43 +1,50 @@
 #!/usr/bin/env node
 /**
- * ✨ Foilfolio v0.1.0
+ * ✨ Foil
  * A sparkly shiny portfolio management system.
- * 📚 Populate your MongoDB database with relevant metadata from your portfolio.
+ * 📚 Populate your database with relevant metadata from your portfolio.
  */
 
-import { red, cyan, green, gray } from 'chalk';
-import buildScripts from './tasks';
-import { isProduction } from './env';
+import { cyan, gray } from 'chalk';
+import { isProduction, isWatch } from './env';
+import { version } from '../package.json';
 
-export async function foilfolio() {
-    // Start Build Process
-    console.log(
-        cyan('✨ Foilfolio v0.1.0') +
-            (isProduction ? ' (production)' : ' (development)')
-    );
+console.log(
+    cyan('✨ Foil v' + version) +
+        gray(isProduction ? ' (production)' : ' (development)')
+);
 
-    // Run each task
-    var scripts = Object.values(buildScripts);
+// 🏁 Let's get started...
 
-    for (var i = 0; i < scripts.length; i++) {
-        let progress = `(${i + 1}/${scripts.length})`;
+import { config } from './config';
+import resolveFoils from './resolve-foils';
+import { Watcher } from './watcher';
+import { Runner } from './runner';
+import { Post } from './types';
 
-        console.log(`\n👟 ${gray(` Running Task ${progress}...`)}\n`);
+export async function foil() {
+    console.log('👋 Hi ' + config.author.name + '!');
 
-        await scripts[i]()
-            .then(_ => {
-                console.log(`\n✔️️ ${green(` Finished Task ${progress}!`)}\n`);
-            })
-            .catch(err => {
-                console.log(`\n❌ ${red(` Failed Task ${progress}!`)}\n`);
-                console.error(err);
-            });
+    // 📃 Gather all modified Foil modules
+    let foils: Post[] = await resolveFoils();
+
+    if (foils.length > 0) {
+        console.log(gray('🎡 Processing ' + foils.length + ' files.'));
     }
-    console.log(
-        '\n💮 ' + gray(` Finished processing ${scripts.length} tasks!\n`)
-    );
+
+    if (isWatch) {
+        // 👓 Watch for changes
+        const watcher = new Watcher();
+        await watcher.watch(foils);
+    } else if (foils.length > 0) {
+        // 🏃‍♂️ Run once
+        const runner = new Runner();
+        await runner.run(foils);
+    } else {
+        console.log(gray('👍 No changes found, exiting.'));
+    }
 
     return process.exit();
 }
 
-foilfolio();
+foil();

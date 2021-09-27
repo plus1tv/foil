@@ -6,9 +6,9 @@ That being said, here's some of the opinions behind **Foilfolio**:
 
 ---
 
-1. Don't want to be too opinionated, but the current implementation builds on React, MongoDB, Node.js, Express, Redux. I'm pretty settled on these for some really good reasons, some people might argue that you don't need mongo but to be honest, portfolios can be very heterogeneous so Mongo works really well in this use case. Some people might believe you can use Rust or C++ or Go as the backend and I agree there, I do have plans for a rust backend in the future. React goes without saying, Vue is basically angular, React is the best front end view library period. Redux is tried and tested, but there's been other libraries similar to it that may be easier to work with.
+1. Don't want to be too opinionated, but the current implementation builds on React, MongoDB, Node.js, Express, Redux. I'm pretty settled on these for some really good reasons, some people might argue that you don't need mongo but to be honest, portfolios can be very heterogeneous so MongoDB works really well in this use case. Some people might believe you can use Rust or C++ or Go as the backend and I agree there, I do have plans for a rust backend in the future. React goes without saying, Vue is basically angular, React is the best front end view library period. Redux is tried and tested, but there's been other libraries similar to it that may be easier to work with.
 
-2. Some similar tools like Gatsby use GraphQL for querying posts. I think this is an extra level of indirection that makes things more complicated for no reason. I'm just using a simple JSON REST api.
+2. Some similar tools like Gatsby use GraphQL for querying posts. I think this is an extra level of indirection that makes things more complicated for no reason. I'm just using a simple JSON REST api. That being said, the ecosystem for GraphQL has reached a level that makes it very convenient to work with.
 
 3. Not including a user login system is a good thing, in fact I'd argue it's better than having one. One less password to keep track of. This does make this tool harder than other tools however. "Oh we have to do everything the Wordpress way!"
 

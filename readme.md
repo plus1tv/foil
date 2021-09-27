@@ -16,13 +16,11 @@ Whether you're a *writer, artist, musician, engineer, or all of the above*, this
 
 ## Features
 
-- 🐙 **Git Powered** with a daemon tool to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
+- 🐙 **Git Powered** with a *daemon tool* to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
 
 - 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games, demos, or tools. Use *JavaScript Modules* for it all, and have it all automatically combine and transpile together for your post.
 
 - 🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
-
-- ⚔️ **State of the Art technologies**, [TypeScript](https://www.typescriptlang.org/), [React](https://reactjs.org/), [Webpack](https://webpack.js.org/), [PostCSS](https://postcss.org/), and more. Write views in React, use 3D renderers like Marmoset Viewer, even render academic files written in Markdown + LaTeX, you'll find it all supported here.
 
 Read about some of the *opinions* that guided its design over [here](docs/opinions.md).
 
@@ -55,7 +53,7 @@ The schema for the "foil" object can be found in [`./foil.schema.json`](foil.sch
     "foil": {
         "title": "WebGPU GLTF",
         "permalink": "demos/webgpu-gltf",
-        "datePublished": "2021-08-22T00:00:00.000Z"
+        "datePublished": "09/02/2021 09:50 PM EST"
     },
     "devDependencies": {
         "@webgpu/types": "^0.1.6"

@@ -1,14 +1,16 @@
 import { gray, yellow } from 'chalk';
 import webpack from 'webpack';
 import { exec } from 'child_process';
-import { statSync, exists, existsSync } from 'fs';
+import { statSync, existsSync } from 'fs';
 import { join, resolve, isAbsolute } from 'path';
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
+import { config as Config } from '../../../config';
 
-import { Loader } from '../types';
+import { Loader } from '../../../types';
 
 import { isProduction } from '../../../env';
+import { cyan } from 'chalk';
 
 const nodeEnvStr: any = isProduction ? 'production' : 'development';
 
@@ -27,41 +29,40 @@ export const ts: Loader = {
         main: /\.tsx?$/
     },
     transform: async foil => {
-        console.log('💙 TypeScript Transformer\n');
         // Get file path
         let file = foil.main;
         if (!isAbsolute(foil.main)) {
-            file = join(foil.rootPath, foil.main);
+            file = join(foil.meta.rootPath, foil.main);
         }
         file.replace(/\\/g, '/');
         let newFile = file.replace(/\.tsx?$/, '.js').replace(/\\/g, '/');
         let newMain = join(foil.rootPermalink, foil.main)
             .replace(/\.tsx?$/, '.js')
             .replace(/\\/g, '/');
+
         // Check if main file has been updated or never existed.
-        let updated = checkUpdated(newFile);
+        let updated = await checkUpdated(file);
 
         if (updated) {
+            console.log('🟦 TypeScript Transformer:');
             let { dependencies, devDependencies } = require(join(
-                foil.rootPath,
+                foil.meta.rootPath,
                 'package.json'
             ));
             if (dependencies || devDependencies) {
                 // Update dependencies through `npm i`
-                await installDependencies(foil.rootPath);
+                await installDependencies(foil.meta.rootPath);
             }
             // Compile module with Webpack
             await compile(
                 join(newFile, '..'),
                 './main',
-                foil.title,
+                newMain,
                 foil.rootPermalink
             );
 
             // Update in Database
             await updateInDatabase(newFile, newMain, file);
-
-            //TODO: build foil.files array with all files resolved by webpack...
 
             let newFoil = {
                 ...foil,
@@ -82,12 +83,16 @@ async function checkUpdated(path: string) {
     return await database.then(async client => {
         let db = client.db('db');
         // Check redirect collection to see if file at path exists.
-        let collection = db.collection('redirect');
+        let collection = db.collection('portfolio');
 
         let foundItems = await collection
             .find({
-                to: path
+                'meta.files.path': path
             })
+            .project({
+                'meta.files': 1
+            })
+
             .limit(1)
             .toArray();
 
@@ -99,10 +104,15 @@ async function checkUpdated(path: string) {
                 return true;
             }
             var { mtime } = statSync(path);
-            return (
-                mtime.getDate() ===
-                new Date(foundItems[0].dateModified).getDate()
-            );
+            for (let file of foundItems[0].meta.files) {
+                if (file.path === path) {
+                    return (
+                        mtime.getDate() ===
+                        new Date(file.modified).getDate()
+                    );
+                }
+            }
+            return true;
         }
     });
 }
@@ -115,7 +125,7 @@ function installDependencies(path: string) {
     // Run package manager, install local node_modules
     return new Promise((res, rej) => {
         exec('npm i', { cwd: path }, (err, stdout, _) => {
-            console.log('Installing dependencies at %s', path);
+            console.log('📦 Installing dependencies via NPM.', path);
             if (err) rej(err);
             else res(stdout);
         });
@@ -145,8 +155,9 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                'node_modules',
-                join(__dirname, '../../../../node_modules')
+                join(Config.currentDir, 'node_modules'),
+                join(Config.foilCliRoot, '..', 'node_modules'),
+                'node_modules'
             ],
             fallback: {
                 crypto: false,
@@ -158,8 +169,9 @@ function compile(root: string, main: string, title: string, permalink: string) {
             modules: [
                 root,
                 join(root, 'node_modules'),
-                'node_modules',
-                join(__dirname, '../../../../node_modules')
+                join(Config.currentDir, 'node_modules'),
+                join(Config.foilCliRoot, '..', 'node_modules'),
+                'node_modules'
             ]
         },
         module: {
@@ -210,11 +222,9 @@ function compile(root: string, main: string, title: string, permalink: string) {
         }
     };
 
-    console.log(`  🔨 Building Module '${title}'\n  ... `);
+    console.log(`🔨 Building Module '${cyan(title)}'`);
 
     var compiler: webpack.Compiler = webpack(config);
-
-    //TODO: get imports resolved by webpack, put them in foilfolio post
 
     return new Promise<any>((res, rej) =>
         compiler.run((err, stats) => {
@@ -237,7 +247,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
                 );
             }
             console.log(
-                '  Done in %s ms!\n',
+                '🟨 Done in %s ms!\n',
                 +stats.endTime - +stats.startTime
             );
         })
@@ -271,10 +281,6 @@ function updateInDatabase(file: string, permalink: string, oldFile: string) {
 
         filesCollection.updateOne(query, { $set: update }, options);
 
-        console.log(
-            gray(
-                `    Indexing Build: \n    file: ${file}\n    permalink: ${permalink}\n`
-            )
-        );
+        console.log(gray(`📒 Indexed ${yellow(permalink)}`));
     });
 }

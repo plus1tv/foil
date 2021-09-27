@@ -1,30 +1,44 @@
-import * as path from 'path';
-import * as fs from 'fs';
+import { resolve, join, isAbsolute } from 'path';
+import { existsSync } from 'fs';
 
 let config = {
-    //default author
+    // Default author for foil posts.
     author: {
-        name: 'Foil Folio',
-        email: 'hello@foilfoilio.com',
-        url: 'https://foilfolio.com'
+        name: 'Alain Galvan',
+        email: 'hi@alain.xyz',
+        url: 'https://alain.xyz/libraries/foil'
     },
 
-    //default files
-    files: [ 'assets/*' ],
+    // Tags for this page/xml.
+    tags: ['programming'],
 
+    // Cover URL for this portfolio's default page.
+    cover: '',
+
+    // Description of this portfolio
+    description: '',
+
+    // Default files that are served statically.
+    files: ['assets/*'],
+
+    // Redirect any portfolio permalinks to this address. { from: '', to: '' }
     redirects: [],
 
-    rootDir: path.resolve('.')
+    // The current directory for searching for foil modules.
+    currentDir: resolve('.'),
+
+    // Foil CLI Root
+    foilCliRoot: resolve(join(__dirname, '..'))
 };
 
-let jsonPath = path.join(path.resolve('.'), 'foilfolio.json');
-if (fs.existsSync(jsonPath)) {
-    console.log("⚙️ Found foilfolio.json file.")
+let jsonPath = join(resolve('.'), 'foil.json');
+if (existsSync(jsonPath)) {
+    console.log('⚙️ Found foil.json file.');
     let newDefaults = require(jsonPath);
     config = { ...config, ...newDefaults };
 
-    if (!path.isAbsolute(config.rootDir)) {
-        config.rootDir = path.join(path.resolve('.'), config.rootDir);
+    if (!isAbsolute(config.currentDir)) {
+        config.currentDir = join(resolve('.'), config.currentDir);
     }
 }
 

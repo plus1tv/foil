@@ -5,12 +5,18 @@ export type Post = {
     keywords: string[];
     authors: { name: string; email: string; url: string }[];
 
-    // Metadata
     main: string;
-    rootPath: string;
-    rootPermalink: string;
-    files: { path: string; modified: Date }[];
     data: any;
+    rootPermalink: string;
+    datePublished: Date;
+    dateModified: Date;
+
+    // Metadata for post resolution
+    meta: {
+        rootPath: string;
+        dateModified: Date;
+        files: { path: string; modified: Date }[];
+    };
 };
 
 export type Loader = {
