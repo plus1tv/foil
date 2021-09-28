@@ -40,9 +40,7 @@ export async function build(foils: Post[]) {
     for (var foil of foils) {
         // If it's a foil module, compile it with loaders
         if (foil) {
-            console.log(
-                '⚪ Processing ' + yellow(`'${foil.permalink}'`) + ':'
-            );
+            console.log('⚪ Processing ' + yellow(`'${foil.permalink}'`) + ':');
 
             let compiledModule = await compile(loaders, foil);
             await writeToDb(compiledModule);
