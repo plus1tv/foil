@@ -5,6 +5,8 @@ ts-node--*/
 *.js
 *.map
 rss.xml
+coverage
+tmp
 
 # Logs
 logs

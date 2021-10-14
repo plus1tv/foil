@@ -1,0 +1,22 @@
+sudo: false
+language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - '14'
+before_install:
+  - npm i
+before_script:
+  - npm prune
+  - rm dist -rf
+script:
+  - npm run build
+  - npm run test
+after_success:
+- npm run coverage
+branches:
+  except:
+    - "/^v\\d+\\.\\d+\\.\\d+$/"
