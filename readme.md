@@ -113,12 +113,12 @@ All source code is available with an MIT license, feel free to take bits and pie
 [cover-url]: https://alain.xyz/libraries/foil
 [license-img]: http://img.shields.io/:license-mit-blue.svg?style=flat-square
 [license-url]: https://opensource.org/licenses/MIT
-[david-url]: https://david-dm.org/plus1tv/foil?path=packages/foil
+[david-url]: https://david-dm.org/plus1tv/foil
 [david-img]: https://david-dm.org/plus1tv/foil.svg?style=flat-square
-[david-dev-url]: https://david-dm.org/plus1tv/foil?path=packages/foil#info=devDependencies
+[david-dev-url]: https://david-dm.org/plus1tv/foil#info=devDependencies
 [david-dev-img]: https://david-dm.org/plus1tv/foil/dev-status.svg?style=flat-square
 [travis-img]: https://img.shields.io/travis/plus1tv/foil.svg?style=flat-square
-[travis-url]:https://travis-ci.org/plus1tv/foil
+[travis-url]: https://app.travis-ci.com/github/plus1tv/foil
 [codecov-img]:https://img.shields.io/codecov/c/github/plus1tv/foil.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/plus1tv/foil
 [npm-img]: https://img.shields.io/npm/v/foil.svg?style=flat-square
