@@ -28,7 +28,44 @@ And typically you'll get a response like this:
 ⚙️ Found foil.json file.
 🍃 Opening MongoDB Connection.
 👋 Hi Alain Galvan!
-👍 No changes found, exiting.
+🎡 Processing 1 files.
+
+👟  Running Task (1/4)...
+🌊 Foil Database Cleaner:
+🧼 Cleaned  'files' collection.
+🧼 Cleaned  'portfolio' collection.
+✔️️  Finished Task (1/4)!
+
+👟  Running Task (2/4)...
+📦 Foil Database Builder:
+⚪ Processing '/blog/frame-analysis-control':
+🟦 TypeScript Transformer:
+🔨 Building Module '/blog/main.js'
+🟨 Done in 322 ms!
+
+📒 Indexed /blog/main.js
+📝 Blog Transformer:
+🏫 Built index.md with Markademic.
+📒 Indexed 18 static files.
+Added Frame Analysis - Control to the Database.
+✔️️  Finished Task (2/4)!
+
+👟  Running Task (3/4)...
+📻 Foilfolio RSS Feeds
+
+RSS feed successfully generated. 
+ Written to alain.xyz\packages\portfolio\rss.xml
+
+✔️️  Finished Task (3/4)!
+
+👟  Running Task (4/4)...
+🏹 Foil Database Redirects
+
+Redirecting /blog/raytracing-denoising to /blog/ray-tracing-denoising.
+✨ Cleaned portfolio collection.
+✔️️  Finished Task (4/4)!
+
+💮  Finished processing 4 tasks!
 ```
 
 ## Features
@@ -127,7 +164,7 @@ All source code is available with an MIT license, feel free to take bits and pie
 [david-img]: https://david-dm.org/plus1tv/foil.svg?style=flat-square
 [david-dev-url]: https://david-dm.org/plus1tv/foil#info=devDependencies
 [david-dev-img]: https://david-dm.org/plus1tv/foil/dev-status.svg?style=flat-square
-[travis-img]: https://img.shields.io/travis/plus1tv/foil.svg?style=flat-square
+[travis-img]: https://img.shields.io/travis/com/plus1tv/foil?style=flat-square
 [travis-url]: https://app.travis-ci.com/github/plus1tv/foil
 [codecov-img]: https://img.shields.io/codecov/c/github/plus1tv/foil.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/plus1tv/foil

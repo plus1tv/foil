@@ -10,6 +10,14 @@ import { Post, Loader } from '../../types';
  */
 let loaders = [ts, blog, book];
 
+export function testLoader(loader, foilModule)
+{
+    return Object.keys(loader.test).reduce((prev, cur) => {
+        let reg = new RegExp(loader.test[cur]);
+        return prev || reg.test(foilModule[cur]);
+    }, false);
+}
+
 /**
  * Compiles foil module by waterfalling through loaders.
  * @param loaders A matching algorithm and a compiler function.
@@ -18,13 +26,7 @@ let loaders = [ts, blog, book];
 async function compile(loaders: Loader[], foilModule: Post) {
     // Check each loader for a match
     for (let rule of loaders) {
-        // Perform deep comparison
-        let compare = Object.keys(rule.test).reduce((prev, cur) => {
-            let reg = new RegExp(rule.test[cur]);
-            return prev || reg.test(foilModule[cur]);
-        }, false);
-
-        if (compare) {
+        if (testLoader(rule, foilModule)) {
             try {
                 foilModule = await rule.transform(foilModule);
             } catch (e) {
