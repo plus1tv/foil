@@ -6,7 +6,7 @@ import { config as Config } from '../config';
 import { Post } from '../types';
 
 export async function rssFeed(_foils: Post[]) {
-    console.log('📻 Foilfolio RSS Feeds \n');
+    console.log('📻 Foil RSS Feeds \n');
 
     let config = {
         title: 'Alain.xyz',

@@ -48,24 +48,24 @@ And typically you'll get a response like this:
 🏫 Built index.md with Markademic.
 📒 Indexed 18 static files.
 Added Frame Analysis - Control to the Database.
-✔️️  Finished Task (2/4)!
+✔️️ Finished Task (2/4)!
 
-👟  Running Task (3/4)...
-📻 Foilfolio RSS Feeds
+👟 Running Task (3/4)...
+📻 Foil RSS Feeds
 
 RSS feed successfully generated. 
- Written to alain.xyz\packages\portfolio\rss.xml
+Written to alain.xyz\packages\portfolio\rss.xml
 
-✔️️  Finished Task (3/4)!
+✔️️ Finished Task (3/4)!
 
-👟  Running Task (4/4)...
+👟 Running Task (4/4)...
 🏹 Foil Database Redirects
 
 Redirecting /blog/raytracing-denoising to /blog/ray-tracing-denoising.
 ✨ Cleaned portfolio collection.
-✔️️  Finished Task (4/4)!
+✔️ Finished Task (4/4)!
 
-💮  Finished processing 4 tasks!
+💮 Finished processing 4 tasks!
 ```
 
 ## Features

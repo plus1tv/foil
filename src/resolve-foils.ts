@@ -10,9 +10,9 @@ import { Post } from './types';
 import { getAsset, getDatabaseFiles } from './tasks/builder/utils';
 
 /**
- * Builds a list of foilfolio files. Used to check if a foilfolio entry has been updated.
+ * Builds a list of foil files. Used to check if a foil entry has been updated.
  * @param rootPath The root file path.
- * @param foilFiles A list of foilfolio file path / modified combo
+ * @param foilFiles A list of foil file path / modified combo
  * @param otherFiles A list of path strings
  */
 function buildFoilFiles(

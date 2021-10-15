@@ -69,7 +69,7 @@ export async function writeToDb(foil: Post) {
 
         var redirectCollection: Collection = db.collection('redirect');
 
-        // ⚡ Index static files in foilfolio directory
+        // ⚡ Index static files in foil directory
         let ignoredTypes = ['tsx', 'ts', 'scss', 'md', 'json', 'lock', 'db'];
 
         var staticFiles = find
