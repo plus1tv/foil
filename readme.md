@@ -7,26 +7,43 @@
 [![License][license-img]][license-url]
 [![Unit Tests][travis-img]][travis-url]
 [![Coverage Tests][codecov-img]][codecov-url]
-[![Dependency Status][david-img]][david-url]
-[![devDependency Status][david-dev-img]][david-dev-url]
-
 </div>
 
-Whether you're a *writer, artist, musician, engineer, or all of the above*, this tool makes it easy and fast to showcase a variety of content.
+Whether you're a _writer, artist, musician, engineer, or all of the above_, this tool makes it easy and fast to showcase a variety of content.
+
+## Usage
+
+```bash
+# 🏗️ Compile once
+foil-cli
+
+# 👀 Watch for changes and auto-recompile
+foil-cli --watch
+```
+
+And typically you'll get a response like this:
+
+```
+✨ Foil v1.0.0-alpha.0 (development)
+⚙️ Found foil.json file.
+🍃 Opening MongoDB Connection.
+👋 Hi Alain Galvan!
+👍 No changes found, exiting.
+```
 
 ## Features
 
-- 🐙 **Git Powered** with a *daemon tool* to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
+-   🐙 **Git Powered** with a _daemon tool_ to handle continuous deployment from your git repo, let git be your CMS and simplify your blog workflow.
 
-- 🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games, demos, or tools. Use *JavaScript Modules* for it all, and have it all automatically combine and transpile together for your post.
+-   🕹️ **Everything is a JavaScript module**, from blog posts to books, music albums, or even custom mini-applications like games, demos, or tools. Use _JavaScript Modules_ for it all, and have it all automatically combine and transpile together for your post.
 
-- 🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
+-   🏙️ **A simple and extendable API** for building truly custom portfolios. Define your own data schemas or use our recommended setups for different portfolio types.
 
-Read about some of the *opinions* that guided its design over [here](docs/opinions.md).
+Read about some of the _opinions_ that guided its design over [here](docs/opinions.md).
 
 ## Ecosystem
 
-- 💻 `foil-cli` - A command line interface to help perform tasks to index a foil portfolio, from compiling packages with Webpack to cleaning the database.
+-   💻 `foil-cli` - A command line interface to help perform tasks to index a foil portfolio, from compiling packages with Webpack to cleaning the database.
 
 ## How it Works
 
@@ -41,15 +58,9 @@ The schema for the "foil" object can be found in [`./foil.schema.json`](foil.sch
 ```json
 {
     "description": "A WebGPU real time renderer of GLTF files.",
-    "files": [
-        "main.tsx"
-    ],
+    "files": ["main.tsx"],
     "main": "main.tsx",
-    "keywords": [
-        "demo",
-        "webgpu",
-        "gltf",
-    ],
+    "keywords": ["demo", "webgpu", "gltf"],
     "foil": {
         "title": "WebGPU GLTF",
         "permalink": "demos/webgpu-gltf",
@@ -78,34 +89,33 @@ import { join } from 'path';
 import { readFileSync } from 'fs';
 
 export let md = {
-  // 💉 a test object that's used to compare with the `package.json` file.
-  test: { file: /\.md$/ },
+    // 💉 a test object that's used to compare with the `package.json` file.
+    test: { file: /\.md$/ },
 
-  // 🚒 the function that takes in the package data and lets you modify it.
-  transform: async post => {
-    let config = {
-      input: readFileSync(post.file).toString(),
-      rerouteLinks: (link) => join(post.permalink, link)
-    };
+    // 🚒 the function that takes in the package data and lets you modify it.
+    transform: async post => {
+        let config = {
+            input: readFileSync(post.file).toString(),
+            rerouteLinks: link => join(post.permalink, link)
+        };
 
-    let data = "";
+        let data = '';
 
-    try {
-      data = markademic(config);
+        try {
+            data = markademic(config);
+        } catch (e) {
+            console.error('Markademic', e.message);
+        }
+
+        return {
+            ...post,
+            data
+        };
     }
-    catch (e) {
-      console.error('Markademic', e.message);
-    }
-
-    return {
-      ...post,
-      data
-    }
-  }
-}
+};
 ```
 
-## Licencing
+## Licensing
 
 All source code is available with an MIT license, feel free to take bits and pieces and use them in your own projects. I would love to hear how you found things useful, feel free to contact me on Twitter <a href="https://twitter.com/Alainxyz">@alainxyz</a> and let me know.
 
@@ -119,7 +129,7 @@ All source code is available with an MIT license, feel free to take bits and pie
 [david-dev-img]: https://david-dm.org/plus1tv/foil/dev-status.svg?style=flat-square
 [travis-img]: https://img.shields.io/travis/plus1tv/foil.svg?style=flat-square
 [travis-url]: https://app.travis-ci.com/github/plus1tv/foil
-[codecov-img]:https://img.shields.io/codecov/c/github/plus1tv/foil.svg?style=flat-square
+[codecov-img]: https://img.shields.io/codecov/c/github/plus1tv/foil.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/plus1tv/foil
 [npm-img]: https://img.shields.io/npm/v/foil.svg?style=flat-square
 [npm-url]: http://npm.im/foil
