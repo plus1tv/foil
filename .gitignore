@@ -7,7 +7,7 @@ src/**/*.js
 rss.xml
 coverage
 tmp
-bin/tests
+bin
 
 # Logs
 logs

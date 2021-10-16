@@ -8,9 +8,15 @@
 	},
 	"author": "Alain Galvan <hi@alain.xyz>",
 	"license": "MIT",
-	"main": "./bin/src/cli.js",
+	"typings": "dist/src/cli.d.ts",
+	"types": "dist/foil-cli.d.ts",
+	"source": "src/foil-cli.js",
+	"main": "dist/foil-cli.js",
+	"module": "dist/foil-cli.module.js",
+	"unpkg": "dist/foil-cli.umd.js",
+	"exports": "./dist/foil-cli.modern.js",
 	"bin": {
-		"foil-cli": "./bin/src/cli.js"
+		"foil-cli": "dist/foil-cli.js"
 	},
 	"engines": {
 		"node": ">=8"
@@ -28,8 +34,8 @@
 		]
 	},
 	"scripts": {
-		"start": "npm run build && npm link --force",
-		"build": "tsc",
+		"start": "npm run build",
+		"build": "cross-env NODE_ENV=production microbundle ./src/cli.ts --compress --target node --generateTypes",
 		"develop": "tsc -w",
 		"test": "c8 ava",
 		"lint": "eslint ./src/**/*.ts",
@@ -50,10 +56,12 @@
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
 		"ava": "^3.15.0",
 		"c8": "^7.10.0",
+		"clean-webpack-plugin": "^4.0.0",
 		"codecov": "^3.8.x",
 		"coveralls": "^3.1.x",
 		"eslint": "^8.0.x",
 		"lint-staged": "^11.2.x",
+		"microbundle": "^0.14.1",
 		"nyc": "^15.1.x",
 		"prettier": "^2.4.x",
 		"ts-node": "^10.3.0",
