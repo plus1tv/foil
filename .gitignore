@@ -2,11 +2,13 @@
 node_modules
 modules/
 ts-node--*/
-*.js
+src/**/*.js
 *.map
 rss.xml
 coverage
 tmp
+bin/*.json
+bin/tests
 
 # Logs
 logs
@@ -27,7 +29,6 @@ Thumbs.db
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-bin
 ts-node
 
 # Personal Scripts

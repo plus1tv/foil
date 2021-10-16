@@ -1,5 +1,6 @@
 declare module 'main';
 declare module 'chalk';
+declare module 'dependency-tree';
 
 declare module 'id3js' {
   type ITags = {
