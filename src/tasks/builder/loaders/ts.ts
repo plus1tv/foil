@@ -1,5 +1,5 @@
 import { gray, yellow } from 'chalk';
-import webpack from 'webpack';
+import { Stats, Compiler, Configuration, webpack, DefinePlugin } from 'webpack';
 import { exec } from 'child_process';
 import { statSync, existsSync } from 'fs';
 import { join, resolve, isAbsolute } from 'path';
@@ -94,7 +94,7 @@ function installDependencies(path: string) {
  * Compile foil module with Webpack.
  */
 function compile(root: string, main: string, title: string, permalink: string) {
-    let config: webpack.Configuration = {
+    let config: Configuration = {
         mode: nodeEnvStr,
         context: resolve(root),
         entry: {
@@ -168,7 +168,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
             web: true
         },
         plugins: [
-            new webpack.DefinePlugin({
+            new DefinePlugin({
                 'process.env': {
                     NODE_ENV: JSON.stringify(nodeEnvStr)
                 }
@@ -182,7 +182,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
 
     console.log(`🔨 Building Module '${cyan(title)}'`);
 
-    var compiler: webpack.Compiler = webpack(config);
+    var compiler: Compiler = webpack(config);
 
     return new Promise<any>((res, rej) =>
         compiler.run((err, stats) => {
@@ -190,7 +190,7 @@ function compile(root: string, main: string, title: string, permalink: string) {
             else res(stats);
         })
     )
-        .then((stats: webpack.Stats) => {
+        .then((stats: Stats) => {
             if (stats.compilation.errors.length > 0) {
                 console.log(
                     yellow(

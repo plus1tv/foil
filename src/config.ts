@@ -28,7 +28,7 @@ let config = {
     currentDir: resolve('.'),
 
     // Foil CLI Root
-    foilCliRoot: resolve(join(__dirname, '..'))
+    foilCliRoot: resolve(join(__dirname))
 };
 
 let jsonPath = join(resolve('.'), 'foil.json');

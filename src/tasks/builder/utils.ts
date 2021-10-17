@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import find from 'find';
+import { statSync } from 'fs';
+import { dirname, join, basename, relative } from 'path';
+import { fileSync } from 'find';
 import { database } from '../../db';
 import { Collection } from 'mongodb';
 import { Post } from '../../types';
@@ -14,13 +14,10 @@ import { cyan, yellow, gray } from 'chalk';
  * Get an asset of a particular name (Whatever Format, from a given file path)
  */
 export function getAsset(file: string, permalink: string, image = 'cover') {
-    let dir = path.dirname(file);
-    let c = find.fileSync(
-        new RegExp(image + '.(png|jpg|jpeg|gif)$', 'mg'),
-        dir
-    );
+    let dir = dirname(file);
+    let c = fileSync(new RegExp(image + '.(png|jpg|jpeg|gif)$', 'mg'), dir);
     return c.length > 0
-        ? path.join(permalink, path.relative(dir, c[0])).replace(/\\/g, '/')
+        ? join(permalink, relative(dir, c[0])).replace(/\\/g, '/')
         : '';
 }
 
@@ -28,13 +25,10 @@ export function getAsset(file: string, permalink: string, image = 'cover') {
  * Create a Permalink from a given path string.
  */
 export function makePermalink(file: string, root: string) {
-    let lastPath = path.basename(file).match(/^index/)
-        ? path.dirname(file)
-        : path.join(
-              path.dirname(file),
-              path.basename(file).replace(/\..+$/, '')
-          );
-    return path.join('/', path.relative(root, lastPath)).replace(/\\/g, '/');
+    let lastPath = basename(file).match(/^index/)
+        ? dirname(file)
+        : join(dirname(file), basename(file).replace(/\..+$/, ''));
+    return join('/', relative(root, lastPath)).replace(/\\/g, '/');
 }
 
 /**
@@ -72,23 +66,22 @@ export async function writeToDb(foil: Post) {
         // ⚡ Index static files in foil directory
         let ignoredTypes = ['tsx', 'ts', 'scss', 'md', 'json', 'lock', 'db'];
 
-        var staticFiles = find
-            .fileSync(foil.meta.rootPath)
-            .filter(
-                f =>
-                    !(
-                        ignoredTypes.reduce(
-                            (prev, cur) => prev || f.endsWith(cur),
-                            false
-                        ) || f.match(/node_modules|diary/)
-                    )
-            );
+        var staticFiles = fileSync(foil.meta.rootPath).filter(
+            f =>
+                !(
+                    ignoredTypes.reduce(
+                        (prev, cur) => prev || f.endsWith(cur),
+                        false
+                    ) || f.match(/node_modules|diary/)
+                )
+        );
 
         // Add Static files to database
         for (var sf of staticFiles) {
-            var filePermalink = path
-                .join(foil.rootPermalink, path.relative(foil.meta.rootPath, sf))
-                .replace(/\\/g, '/');
+            var filePermalink = join(
+                foil.rootPermalink,
+                relative(foil.meta.rootPath, sf)
+            ).replace(/\\/g, '/');
 
             let query = {
                 to: sf
@@ -97,7 +90,7 @@ export async function writeToDb(foil: Post) {
             let update = {
                 from: filePermalink,
                 to: sf,
-                dateModified: fs.statSync(sf).mtime
+                dateModified: statSync(sf).mtime
             };
 
             let options = {

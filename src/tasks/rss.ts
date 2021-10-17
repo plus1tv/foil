@@ -1,4 +1,4 @@
-import RSS from 'rss';
+import * as RSS from 'rss';
 import { database } from '../db';
 import { writeFileSync, statSync } from 'fs';
 import { join } from 'path';

@@ -1,4 +1,4 @@
-import markademic from 'markademic';
+import { markademic } from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { Loader } from '../../../types';
