@@ -28,7 +28,10 @@ let config = {
     currentDir: resolve('.'),
 
     // Foil CLI Root
-    foilCliRoot: resolve(join(__dirname))
+    foilCliRoot: resolve(join(__dirname)),
+
+    // Mongo URL
+    mongoUrl: "mongodb://127.0.0.1:27017"
 };
 
 let jsonPath = join(resolve('.'), 'foil.json');

@@ -1,15 +1,20 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient } from 'mongodb';
+import { gray } from 'chalk';
+import { config as foilConfig } from './config';
 
-const url = 'mongodb://localhost:27017';
-
-console.log('🍃 Opening MongoDB Connection.');
-
-const database: Promise<MongoClient> = MongoClient.connect(url).catch((reason) =>
-    console.error(reason)
-) as Promise<MongoClient>;
+console.log(
+    '🍃 Opening MongoDB Connection. ' + gray('(' + foilConfig.mongoUrl + ')')
+);
+const config = {
+    appName: 'Foil Backend'
+};
+const database: Promise<MongoClient> = MongoClient.connect(
+    foilConfig.mongoUrl,
+    config
+).catch(reason => console.error(reason)) as Promise<MongoClient>;
 
 function closeConnection() {
-    database.then(async (client) => {
+    database.then(async client => {
         console.log('🍃 Closing MongoDB Connection.');
         client.close();
         process.exit();

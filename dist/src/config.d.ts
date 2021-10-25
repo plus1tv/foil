@@ -11,5 +11,6 @@ declare let config: {
     redirects: any[];
     currentDir: string;
     foilCliRoot: string;
+    mongoUrl: string;
 };
 export { config };
