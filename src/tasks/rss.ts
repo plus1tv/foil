@@ -109,27 +109,10 @@ export async function rssFeed(_foils: Post[]) {
             description: item.description,
             author: [
                 {
-                    name: 'Jane Doe',
-                    email: 'janedoe@example.com',
-                    link: 'https://example.com/janedoe'
+                    name: Config.author.name, 
+                    email: Config.author.email,
+                    link: Config.author.url 
                 },
-                {
-                    name: 'Joe Smith',
-                    email: 'joesmith@example.com',
-                    link: 'https://example.com/joesmith'
-                }
-            ],
-            contributor: [
-                {
-                    name: 'Shawn Kemp',
-                    email: 'shawnkemp@example.com',
-                    link: 'https://example.com/shawnkemp'
-                },
-                {
-                    name: 'Reggie Miller',
-                    email: 'reggiemiller@example.com',
-                    link: 'https://example.com/reggiemiller'
-                }
             ],
             date: item.datePublished,
             image: {
