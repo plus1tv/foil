@@ -1,4 +1,5 @@
 declare let config: {
+    title: string;
     author: {
         name: string;
         email: string;

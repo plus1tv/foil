@@ -1,4 +1,4 @@
-import * as RSS from 'rss';
+import { Feed } from 'feed';
 import { database } from '../db';
 import { writeFileSync, statSync } from 'fs';
 import { join } from 'path';
@@ -29,15 +29,38 @@ export async function rssFeed(_foils: Post[]) {
 
         categories: Config.tags,
 
-        pubDate: new Date(),
-
-        ttl: 1200
+        pubDate: new Date()
     };
 
-    let rss = new RSS(config);
+    const feed = new Feed({
+        title: Config.title,
+        description: Config.description,
+        id: Config.author.url,
+        link: Config.author.url,
+        language: 'en', // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+        image: Config.cover,
+        favicon: Config.author.url + '/assets/brand/favicon/favicon.ico',
+        copyright: 'Copyright ' + Config.author.name + ' All Rights Reserved.',
+        updated: new Date(),
+        generator: 'Feed in Foil',
+        feedLinks: {
+            rss: Config.author.url + '/rss',
+            json: Config.author.url + '/feedJson',
+            atom: Config.author.url + '/feedAtom'
+        },
+        author: {
+            name: Config.author.name,
+            email: Config.author.email,
+            link: Config.author.url
+        },
+        ttl: 1200
+    });
+    for (let tag of Config.tags) {
+        feed.addCategory(tag);
+    }
 
     // Populate RSS Feed
-    let foilfolioData = await new Promise<any[]>((res, _) =>
+    let foilData = await new Promise<any[]>((res, _) =>
         database.then(client => {
             let db = client.db('db');
             var col = db.collection('portfolio');
@@ -57,7 +80,7 @@ export async function rssFeed(_foils: Post[]) {
         })
     );
 
-    for (var item of foilfolioData) {
+    for (var item of foilData) {
         let fileData = await new Promise<any[]>((res, _) =>
             database.then(client => {
                 let db = client.db('db');
@@ -79,20 +102,45 @@ export async function rssFeed(_foils: Post[]) {
             filesize = statSync(fileData[0].to).size;
         }
 
-        rss.item({
+        feed.addItem({
             title: item.title,
+            id: Config.author.url + item.permalink,
+            link: Config.author.url + item.permalink,
             description: item.description,
-            url: Config.author.url + item.permalink,
+            author: [
+                {
+                    name: 'Jane Doe',
+                    email: 'janedoe@example.com',
+                    link: 'https://example.com/janedoe'
+                },
+                {
+                    name: 'Joe Smith',
+                    email: 'joesmith@example.com',
+                    link: 'https://example.com/joesmith'
+                }
+            ],
+            contributor: [
+                {
+                    name: 'Shawn Kemp',
+                    email: 'shawnkemp@example.com',
+                    link: 'https://example.com/shawnkemp'
+                },
+                {
+                    name: 'Reggie Miller',
+                    email: 'reggiemiller@example.com',
+                    link: 'https://example.com/reggiemiller'
+                }
+            ],
             date: item.datePublished,
-            enclosure: {
+            image: {
                 url: Config.author.url + item.cover,
-                size: filesize
+                length: filesize
             }
         });
     }
 
     // Generate file
-    let xml = rss.xml();
+    let xml = feed.rss2();
 
     // Place in `<build_dir>/rss.xml`
     let p = join(Config.currentDir, 'rss.xml');

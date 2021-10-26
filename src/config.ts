@@ -2,6 +2,9 @@ import { resolve, join, isAbsolute } from 'path';
 import { existsSync } from 'fs';
 
 let config = {
+    // Title for the host site.
+    title: 'Alain.xyz',
+
     // Default author for foil posts.
     author: {
         name: 'Alain Galvan',
@@ -31,7 +34,7 @@ let config = {
     foilCliRoot: resolve(join(__dirname)),
 
     // Mongo URL
-    mongoUrl: "mongodb://127.0.0.1:27017"
+    mongoUrl: 'mongodb://127.0.0.1:27017'
 };
 
 let jsonPath = join(resolve('.'), 'foil.json');
