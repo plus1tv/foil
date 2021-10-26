@@ -9,7 +9,7 @@ export async function rssFeed(_foils: Post[]) {
     console.log('📻 Foil RSS Feeds \n');
 
     let config = {
-        title: 'Alain.xyz',
+        title: Config.title,
 
         description: Config.description,
 
@@ -38,11 +38,12 @@ export async function rssFeed(_foils: Post[]) {
         id: Config.author.url,
         link: Config.author.url,
         language: 'en', // optional, used only in RSS 2.0, possible values: http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
-        image: Config.cover,
-        favicon: Config.author.url + '/assets/brand/favicon/favicon.ico',
+        image: Config.author.url + Config.cover,
         copyright: 'Copyright ' + Config.author.name + ' All Rights Reserved.',
         updated: new Date(),
-        generator: 'Feed in Foil',
+        generator: 'Feed from NPM',
+        feed: Config.author.url + '/rss',
+        docs: Config.author.url,
         feedLinks: {
             rss: Config.author.url + '/rss',
             json: Config.author.url + '/feedJson',

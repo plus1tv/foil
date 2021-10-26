@@ -3,8 +3,7 @@ import { existsSync } from 'fs';
 
 let config = {
     // Title for the host site.
-    title: 'Alain.xyz',
-
+    title: 'Foil',
     // Default author for foil posts.
     author: {
         name: 'Alain Galvan',
