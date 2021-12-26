@@ -1,9 +1,20 @@
-import { stat } from 'fs';
+import { promises } from 'fs';
+const { access } = promises;
 import { cyan } from 'chalk';
 import { Collection } from 'mongodb';
 import { database } from '../db';
 import { basename } from 'path';
 import { Post } from '../types';
+
+async function exists(path) {
+    try {
+        await access(path);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 /**
  * Run through every indexed file and portfolio item to see if it still exists.
  */
@@ -19,7 +30,7 @@ export async function clean(_foils: Post[]) {
                 .find({})
                 .toArray()
                 .catch(err => console.error(err))
-                .then(res => {
+                .then(async res => {
                     if (res)
                         for (var f of res) {
                             let { _id, permalink = null } = f;
@@ -30,20 +41,17 @@ export async function clean(_foils: Post[]) {
                                     col.deleteOne({ _id })
                                         .catch(err => console.error(err))
                                         .then(() =>
-                                            console.log('❌ Removed ' + file.path)
+                                            console.log(
+                                                '❌ Removed ' + file.path
+                                            )
                                         );
                                 };
 
-                                if (/\.([A-z])*$/.test(file.path))
-                                    stat(file.path, stats => {
-                                        if (stats?.code === 'ENOENT') {
-                                            deleteThis();
-                                        }
-
+                                if (/\.([A-z])*$/.test(file.path)) {
+                                    if (await exists(file.path)) {
                                         if (
-                                            stats &&
                                             basename(file.path) ==
-                                                'package.json'
+                                            'package.json'
                                         ) {
                                             if (permalink) {
                                                 //check if package.json has same permalink as this, if not delete this.
@@ -66,7 +74,10 @@ export async function clean(_foils: Post[]) {
                                                 }
                                             }
                                         }
-                                    });
+                                    } else {
+                                        deleteThis();
+                                    }
+                                }
                             }
                             //there can only be one database entry per file set
                         }

@@ -37,3 +37,6 @@ ts-node
 
 # Editors
 .vscode
+
+# Build
+dist

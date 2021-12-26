@@ -6,37 +6,48 @@ import { Loader } from '../../../types';
 export let book: Loader = {
     test: { permalink: /^\/books\/|docs/ },
     transform: async (foil) => {
+
+    // 📄 Get Table of Contents file
+    let toc = null;
+    for (let file of foil.meta.files) {
+        if (/(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null) {
+            toc = file;
+            break;
+        }
+    }
+    if (!toc) {
+        throw new Error(
+            'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
+        );
+    }
+
         console.log('📚 Book Transformer: \n');
 
+        // 🌲 Convert table of contents to navigation tree.
         type NavStructure = { text: string; link: string; children: NavStructure[] };
         let navStructure: NavStructure[] = [];
         let chapters = [];
 
-        // Get Table of Contents (summary/toc/table-of-contents.md)
-        let toc = null;
-        for (let file of foil.meta.files) {
-            if (/(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null) {
-                toc = file;
-                break;
-            }
-        }
-        if (!toc) {
-            throw new Error(
-                'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
-            );
-        }
-
-        // TODO: We should generate "sub-foils" from this page, individual modules that correspond to this foil package...
-
         // Traverse Table of Contents to build navigation map
         let tocString = readFileSync(toc.path).toString();
         let tocUnorderedLists = /(\n\s*(\-|\+|\*)\s.*)+/g.exec(tocString);
-
         if (!tocUnorderedLists) {
             throw new Error(
                 'Table of contents is missing an unordered list of links. This is needed to build navigation data structures and traverse the book.'
             );
         }
+        
+        /**
+         * 📖 Basic Top-down Parser built with Regex:
+         * Tabs, >1 space (default 4) represent subtrees.
+         * Example:
+         * # Table of Contents
+         * -   [Introduction](index.md)
+         *     -   [Initialize the API](ch1-initialize-api.md)
+         * -   [Raster Graphics Pipeline](ch2-raster.md)
+         * -   [Compute Pipeline](ch3-compute.md)
+         * -   [Ray Tracing Pipeline](ch4-ray-tracing-pipeline.md)
+         */
 
         tocString = tocString.substr(tocUnorderedLists.index, tocString.length);
 
