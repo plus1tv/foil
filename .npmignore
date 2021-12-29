@@ -1,4 +1,4 @@
-./src
+src
 !bin/src
 docs
 !docs/logo.svg

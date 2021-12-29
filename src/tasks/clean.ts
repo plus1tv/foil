@@ -91,3 +91,43 @@ export async function clean(_foils: Post[]) {
         console.log(`🧼 Cleaned ${cyan("'portfolio'")} collection.`);
     });
 }
+
+export async function reset() {
+    console.log('🌊 Foil Database Cleaner:');
+    await database.then(async client => {
+        let db = client.db('db');
+        var redirectCol = db.collection('redirect');
+        var portfolioCol = db.collection('portfolio');
+
+        var cleanFiles = (col: Collection) =>
+            col
+                .find({})
+                .toArray()
+                .catch(err => console.error(err))
+                .then(async res => {
+                    if (res)
+                        for (var f of res) {
+                            let { _id } = f;
+                            let files = f.to ? [{ path: f.to }] : f.meta.files;
+                            for (let file of files) {
+                                //Should we delete this entry?
+                                let deleteThis = () => {
+                                    col.deleteOne({ _id })
+                                        .catch(err => console.error(err))
+                                        .then(() =>
+                                            console.log(
+                                                '❌ Removed ' + file.path
+                                            )
+                                        );
+                                };
+                                deleteThis();
+                            }
+                        }
+                });
+
+        await cleanFiles(redirectCol);
+        console.log(`🧼 Reset ${cyan("'files'")} collection.`);
+        await cleanFiles(portfolioCol);
+        console.log(`🧼 Reset ${cyan("'portfolio'")} collection.`);
+    });
+}

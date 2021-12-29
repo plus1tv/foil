@@ -7,4 +7,6 @@ let isProduction =
 
 let isWatch = argv.reduce((prev, cur) => prev || cur === '--watch', false);
 
-export { isProduction, isWatch };
+let reset = argv.reduce((prev, cur) => prev || cur === 'reset', false);
+
+export { reset, isProduction, isWatch };

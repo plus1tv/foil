@@ -1,45 +1,56 @@
 import { markademic } from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
+
 import { Loader } from '../../../types';
 
 export let book: Loader = {
     test: { permalink: /^\/books\/|docs/ },
-    transform: async (foil) => {
-
-    // 📄 Get Table of Contents file
-    let toc = null;
-    for (let file of foil.meta.files) {
-        if (/(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null) {
-            toc = file;
-            break;
+    transform: async foil => {
+        // 📄 Get Table of Contents file
+        let toc = null;
+        for (let file of foil.meta.files) {
+            if (
+                /(summary)|(toc)|(table-of-contents)/i.exec(file.path) != null
+            ) {
+                toc = file;
+                break;
+            }
         }
-    }
-    if (!toc) {
-        throw new Error(
-            'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
-        );
-    }
+        if (!toc) {
+            throw new Error(
+                'Foil book is missing a Table of Contents! Create a file called `toc.md` in the root directory of this entry.'
+            );
+        }
 
         console.log('📚 Book Transformer: \n');
 
         // 🌲 Convert table of contents to navigation tree.
-        type NavStructure = { text: string; link: string; children: NavStructure[] };
-        let navStructure: NavStructure[] = [];
+        type NavStructure = {
+            text: string;
+            link: string;
+            children: NavStructure[];
+        };
+        let navStructure: NavStructure = {
+            text: '',
+            link: '',
+            children: []
+        };
         let chapters = [];
 
         // Traverse Table of Contents to build navigation map
         let tocString = readFileSync(toc.path).toString();
+        let contentsRegex = /(?![\t ]*[\-,\*][\t ]*\[)[\w\t ]*(?=\])/;
         let tocUnorderedLists = /(\n\s*(\-|\+|\*)\s.*)+/g.exec(tocString);
         if (!tocUnorderedLists) {
             throw new Error(
                 'Table of contents is missing an unordered list of links. This is needed to build navigation data structures and traverse the book.'
             );
         }
-        
+
         /**
          * 📖 Basic Top-down Parser built with Regex:
-         * Tabs, >1 space (default 4) represent subtrees.
+         * Tabs, >1 space represent subtrees.
          * Example:
          * # Table of Contents
          * -   [Introduction](index.md)
@@ -48,115 +59,129 @@ export let book: Loader = {
          * -   [Compute Pipeline](ch3-compute.md)
          * -   [Ray Tracing Pipeline](ch4-ray-tracing-pipeline.md)
          */
+        let parentStack = [navStructure];
+        let prevStructure = navStructure;
+        let result;
+        let prevSpaces = 0;
+        while ((result = contentsRegex.exec(tocString)) !== null) {
+            let title = result[0];
+            let matchIndex = result.index;
+            let spaces = 0;
 
-        tocString = tocString.substr(tocUnorderedLists.index, tocString.length);
+            // Count how much space there is before `-`
+            while (
+                matchIndex > 0 &&
+                tocString[matchIndex].match(/\*|\-/) === null
+            ) {
+                matchIndex--;
+            }
+            matchIndex--;
+            while (matchIndex > 0 && tocString[matchIndex].match(/\r|\n/)) {
+                matchIndex--;
+                spaces++;
+            }
 
-        let prevParent = navStructure;
-        let curParent = navStructure;
-        let curTabCount = 0.0;
+            // Get link
+            let tocSlice = tocString.slice(result.index + title.length);
+            let linkMatches = /(?!\()[\w\t \.\-]*(?=\))/.exec(tocSlice);
+            if (linkMatches === null) {
+                continue;
+            }
+            let link = linkMatches[0];
 
-        let linkRegex = /\[([^\[]+)\]\(([^\)]+)\)/g;
-        let match: RegExpExecArray = linkRegex.exec(tocString);
-        while (match != null) {
-            //determine depth by backchecking
-            /*
-                let curIndex = match.index;
-                let curChar = tocUnorderedList.charAt(curIndex);
-                let beginDepthTest = false;
-                let tabCount = 0;
-                while (curIndex > 0 && curChar != '\n') {
-                    if (beginDepthTest) {
-                        if (curChar == '\t') {
-                            tabCount += 1.0;
-                        }
-                        if (curChar == ' ') {
-                            tabCount += 0.5;
-                        }
-                    }
-                    if (curChar == '*' || curChar == '-') {
-                        beginDepthTest = true;
-                    }
-                    curIndex--;
-                    curChar = tocUnorderedList.charAt(curIndex);
-                }
-                */
-
-            // Get Name and Link
+            // Use space count to build navigation structure
             let curNavStruct = {
-                text: match[1],
-                link: match[2],
+                text: title,
+                link: link,
                 children: []
             };
-            /*
-                if (tabCount < 1.0) {
-                    curParent = navStructure;
-                    curTabCount = 0.0;
-                }
 
-                // going down a level
-                if (curTabCount > tabCount) {
-                    curParent = prevParent;
-                    curTabCount -= 1.0;
-                    //going up a level
-                } else if (curTabCount < tabCount) {
-                    curTabCount += 1.0;
-                    curParent = navStructure.length > 0 ? navStructure[navStructure.length - 1].children : navStructure;
+            // Build parent stack
+            if (spaces == 0) {
+                parentStack = [navStructure];
+            } else if (spaces > prevSpaces) {
+                // go in
+                if (prevStructure != navStructure) {
+                    parentStack.push(prevStructure);
                 }
-                */
-            curParent.push(curNavStruct);
-            match = linkRegex.exec(tocString);
+            } else if (spaces < prevSpaces) {
+                parentStack.pop();
+                if (parentStack.length <= 0) {
+                    parentStack = [navStructure];
+                }
+            }
+
+            // save prefix traversal state
+            prevSpaces = spaces;
+            prevStructure = curNavStruct;
+
+            // Add current nav structure to parent
+            parentStack[parentStack.length - 1].children.push(curNavStruct);
         }
 
         // traverse navigation structure, determine if files exist
-        for (let child of navStructure) {
-            let isFile = /\.[^/.]+$/.exec(child.link);
-            let isPath = /(\/|\\)$/.exec(child.link);
-            let filePath = join(foil.meta.rootPath, child.link);
-            if (isFile) {
-                // raw-vulkan/ch1-introduction.md
-                child.link = child.link.replace(/\.[^/.]+$/, '');
-            }
-            if (isPath) {
-                // raw-vulkan/ch1-introduction/
-                child.link = child.link.substr(0, child.link.length - 1);
-                filePath += 'index.md';
-            }
-            
-            child.link = join('/', foil.rootPermalink, child.link).replace(/\\/gi, '/');
-            console.log(child.link);
-            console.log(filePath);
-
-            if (!isFile && !isPath) {
-                // raw-vulkan/ch1-introduction
-                filePath += '.md';
-            }
-            let citations = null;
-            let bibPath = join(foil.meta.rootPath, 'bib.json');
-            let localBibPath = join(filePath, isFile ? '..' : '', 'bib.json');
-            if (existsSync(bibPath)) {
-                citations = require(bibPath);
-            }
-            if (existsSync(localBibPath)) {
-                let curCitations = require(localBibPath);
-                citations = citations ? { ...citations, ...curCitations } : curCitations;
-            }
-
-            if (existsSync(filePath)) {
-                var config = {
-                    input: readFileSync(filePath).toString(),
-                    rerouteLinks: (link) => join(foil.rootPermalink, link)
-                };
-
-                if (citations) {
-                    config['citations'] = citations;
+        let recursiveTraversal = curStructure => {
+            for (let child of curStructure.children) {
+                let isFile = /\.[^/.]+$/.exec(child.link);
+                let isPath = /(\/|\\)$/.exec(child.link);
+                let filePath = join(foil.meta.rootPath, child.link);
+                if (isFile) {
+                    // raw-vulkan/ch1-introduction.md
+                    child.link = child.link.replace(/\.[^/.]+$/, '');
+                }
+                if (isPath) {
+                    // raw-vulkan/ch1-introduction/
+                    child.link = child.link.substr(0, child.link.length - 1);
+                    filePath += 'index.md';
                 }
 
-                var contents = markademic(config);
+                child.link = join('/', foil.rootPermalink, child.link).replace(
+                    /\\/gi,
+                    '/'
+                );
 
-                // chapters corresponds to a flattened version of the navStructure
-                chapters.push(contents);
+                if (!isFile && !isPath) {
+                    // raw-vulkan/ch1-introduction
+                    filePath += '.md';
+                }
+                let citations = null;
+                let bibPath = join(foil.meta.rootPath, 'bib.json');
+                let localBibPath = join(
+                    filePath,
+                    isFile ? '..' : '',
+                    'bib.json'
+                );
+                if (existsSync(bibPath)) {
+                    citations = require(bibPath);
+                }
+                if (existsSync(localBibPath)) {
+                    let curCitations = require(localBibPath);
+                    citations = citations
+                        ? { ...citations, ...curCitations }
+                        : curCitations;
+                }
+
+                if (existsSync(filePath)) {
+                    var config = {
+                        input: readFileSync(filePath).toString(),
+                        rerouteLinks: link => join(foil.rootPermalink, link)
+                    };
+
+                    if (citations) {
+                        config['citations'] = citations;
+                    }
+
+                    var contents = markademic(config);
+
+                    // chapters corresponds to a flattened version of the navStructure
+                    chapters.push(contents);
+
+                    recursiveTraversal(child);
+                }
             }
-        }
+        };
+
+        recursiveTraversal(navStructure);
 
         return {
             ...foil,

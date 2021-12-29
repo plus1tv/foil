@@ -43,34 +43,10 @@ export let blog: Loader = {
                     yellow(basename(mdFile.path)) +
                     ' with Markademic.'
             );
-            // 🎧 Setup Audioblog Data (Optional)
-            var audioFile = null;
-            for (let file of foil.meta.files) {
-                if (/\.mp3$/.exec(file.path)) {
-                    audioFile = file.path
-                        .substr(foil.meta.rootPath.length)
-                        .replace(/\\/g, '/');
-                }
-            }
-            var captions: {
-                time: number;
-                highlight: { begin: number; end: number }[];
-            }[] = [];
-            var captionsPath = join(foil.meta.rootPath, 'captions.json');
-            if (existsSync(captionsPath)) {
-                captions = require(captionsPath).captions;
-                if (Array.isArray(captions)) {
-                    captions = [];
-                }
-            }
 
             // 💾 Finalize Data
             var data = {
-                article,
-                audio: {
-                    file: audioFile,
-                    captions
-                }
+                article
             };
 
             if (typeof foil['data'] === 'object') {
