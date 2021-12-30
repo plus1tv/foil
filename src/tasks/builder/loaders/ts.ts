@@ -1,4 +1,5 @@
-import { gray, yellow } from 'chalk';
+import chalk from 'chalk';
+const { cyan, yellow, gray } = chalk;
 import { Stats, Compiler, Configuration, webpack, DefinePlugin } from 'webpack';
 import { exec } from 'child_process';
 import { statSync, existsSync } from 'fs';
@@ -10,7 +11,6 @@ import { checkUpdated } from './utils';
 import { Loader } from '../../../types';
 
 import { isProduction } from '../../../env';
-import { cyan } from 'chalk';
 
 const nodeEnvStr: any = isProduction ? 'production' : 'development';
 

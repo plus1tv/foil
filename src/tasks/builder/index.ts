@@ -1,5 +1,6 @@
 import * as fs from 'fs';
-import { yellow } from 'chalk';
+import chalk from 'chalk';
+const { yellow } = chalk;
 
 import { getAsset, getDatabaseFiles, writeToDb } from './utils';
 import { ts, blog, book } from './loaders';

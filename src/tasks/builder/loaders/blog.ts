@@ -4,7 +4,8 @@ import { readFileSync, existsSync } from 'fs';
 import { checkUpdated } from './utils';
 
 import { Loader } from '../../../types';
-import { yellow } from 'chalk';
+import chalk from 'chalk';
+const { yellow } = chalk;
 
 export let blog: Loader = {
     // 💉 a test object that's used to compare with the `package.json` file.

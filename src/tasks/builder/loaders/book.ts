@@ -63,6 +63,8 @@ export let book: Loader = {
         let prevStructure = navStructure;
         let result;
         let prevSpaces = 0;
+        let minSpaces = -1;
+
         while ((result = contentsRegex.exec(tocString)) !== null) {
             let title = result[0];
             let matchIndex = result.index;
@@ -76,7 +78,10 @@ export let book: Loader = {
                 matchIndex--;
             }
             matchIndex--;
-            while (matchIndex > 0 && tocString[matchIndex].match(/\r|\n/)) {
+            while (
+                matchIndex > 0 &&
+                tocString[matchIndex].match(/\r|\n/) === null
+            ) {
                 matchIndex--;
                 spaces++;
             }
@@ -97,6 +102,9 @@ export let book: Loader = {
             };
 
             // Build parent stack
+            if (minSpaces < 0) {
+                minSpaces = spaces;
+            }
             if (spaces == 0) {
                 parentStack = [navStructure];
             } else if (spaces > prevSpaces) {
@@ -112,6 +120,13 @@ export let book: Loader = {
             }
 
             // save prefix traversal state
+            tocString = tocString.slice(
+                result.index +
+                    title.length +
+                    linkMatches.index +
+                    link.length +
+                    1
+            );
             prevSpaces = spaces;
             prevStructure = curNavStruct;
 
@@ -134,7 +149,9 @@ export let book: Loader = {
                     child.link = child.link.substr(0, child.link.length - 1);
                     filePath += 'index.md';
                 }
-
+                if (/index$/.exec(child.link)) {
+                    child.link = join(child.link, '..', '/');
+                }
                 child.link = join('/', foil.rootPermalink, child.link).replace(
                     /\\/gi,
                     '/'
@@ -164,7 +181,10 @@ export let book: Loader = {
                 if (existsSync(filePath)) {
                     var config = {
                         input: readFileSync(filePath).toString(),
-                        rerouteLinks: link => join(foil.rootPermalink, link)
+                        rerouteLinks: link => join(foil.rootPermalink, link).replace(
+                            /\\/gi,
+                            '/'
+                        )
                     };
 
                     if (citations) {
@@ -177,16 +197,27 @@ export let book: Loader = {
                     chapters.push(contents);
 
                     recursiveTraversal(child);
+                } else {
+                    console.error(
+                        'Failed to find corresponding table of contents entry for ' +
+                            filePath +
+                            ', aborting.'
+                    );
+                    return foil;
                 }
             }
         };
 
         recursiveTraversal(navStructure);
 
+        if (/\*$/.exec(foil.permalink) === null) {
+            foil.permalink = join(foil.permalink, '*');
+        }
+
         return {
             ...foil,
             data: {
-                toc: navStructure,
+                toc: [...navStructure.children],
                 chapters
             }
         };

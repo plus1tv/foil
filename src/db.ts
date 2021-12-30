@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
-import { gray } from 'chalk';
+import chalk from 'chalk';
+const { gray } = chalk;
 import { config as foilConfig } from './config';
 
 console.log(

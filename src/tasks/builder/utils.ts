@@ -4,7 +4,8 @@ import { fileSync } from 'find';
 import { database } from '../../db';
 import { Collection } from 'mongodb';
 import { Post } from '../../types';
-import { cyan, yellow, gray } from 'chalk';
+import chalk from 'chalk';
+const { cyan, yellow, gray } = chalk;
 /**
  * The following are various functions to get metadata
  * for specific attributes of the portfolio system.

@@ -1,4 +1,5 @@
-import { red, cyan, green, gray } from 'chalk';
+import chalk from 'chalk';
+const { gray } = chalk;
 import resolveFoils from './resolve-foils';
 import { Runner } from './runner';
 import { Post } from './types';

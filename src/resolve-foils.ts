@@ -114,7 +114,10 @@ export function foilify(packagePath: string): Post {
         return null;
     }
 
-    permalink = '/' + permalink;
+    permalink = '/' + permalink.replace(
+        /\\/gi,
+        '/'
+    );
 
     let rootPermalink = permalink;
 

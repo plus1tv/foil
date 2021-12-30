@@ -1,5 +1,6 @@
 import buildScripts from './tasks';
-import { red, cyan, green, gray } from 'chalk';
+import chalk from 'chalk';
+const { red, green, gray } = chalk;
 import { Post } from './types';
 export class Runner {
     async run(foils: Post[]) {
