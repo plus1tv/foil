@@ -5,7 +5,7 @@
  * 📚 Populate your database with relevant metadata from your portfolio.
  */
 
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { cyan, gray } = chalk;
 import * as cliArgs from './env';
 import { version } from '../package.json';

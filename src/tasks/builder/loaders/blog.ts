@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'fs';
 import { checkUpdated } from './utils';
 
 import { Loader } from '../../../types';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { yellow } = chalk;
 
 export let blog: Loader = {

@@ -1,6 +1,6 @@
 import { promises } from 'fs';
 const { access } = promises;
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { cyan } = chalk;
 import { Collection } from 'mongodb';
 import { database } from '../db';

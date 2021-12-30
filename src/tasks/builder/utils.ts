@@ -4,7 +4,7 @@ import { fileSync } from 'find';
 import { database } from '../../db';
 import { Collection } from 'mongodb';
 import { Post } from '../../types';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { cyan, yellow, gray } = chalk;
 /**
  * The following are various functions to get metadata

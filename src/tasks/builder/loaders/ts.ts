@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { cyan, yellow, gray } = chalk;
 import { Stats, Compiler, Configuration, webpack, DefinePlugin } from 'webpack';
 import { exec } from 'child_process';

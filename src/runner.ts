@@ -1,5 +1,5 @@
 import buildScripts from './tasks';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 const { red, green, gray } = chalk;
 import { Post } from './types';
 export class Runner {
