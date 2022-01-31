@@ -1,5 +1,4 @@
-import * as chalk from 'chalk';
-const { cyan, yellow, gray } = chalk;
+import { cyan, yellow, gray } from 'chalk';
 import { Stats, Compiler, Configuration, webpack, DefinePlugin } from 'webpack';
 import { exec } from 'child_process';
 import { statSync, existsSync } from 'fs';
@@ -155,6 +154,28 @@ function compile(root: string, main: string, title: string, permalink: string) {
                         publicPath: permalink
                     }
                 },
+                {
+                    test: /\.mdx$/,
+                    use: [
+                        {
+                            loader: 'ts-loader',
+                            options: {
+                                transpileOnly: true,
+                                compilerOptions: {
+                                    module: 'esnext',
+                                    sourceMap: !isProduction
+                                }
+                            }
+                        },
+                        {
+                            loader: '@mdx-js/loader',
+                            options: {
+                                jsx: false
+                            }
+                        }
+                    ]
+                },
+
                 {
                     test: /\.(wgsl|glsl)$/,
                     type: 'asset/source'
