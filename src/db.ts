@@ -1,10 +1,8 @@
 import { MongoClient } from 'mongodb';
-import * as chalk from 'chalk';
-const { gray } = chalk;
 import { config as foilConfig } from './config';
 
 console.log(
-    '🍃 Opening MongoDB Connection. ' + gray('(' + foilConfig.mongoUrl + ')')
+    '🍃 Opening MongoDB Connection. ' + ('\x1b[2m(' + foilConfig.mongoUrl + ')\x1b[0m')
 );
 const config = {
     appName: 'Foil Backend'

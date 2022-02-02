@@ -1,8 +1,19 @@
-import { cyan, yellow, gray } from 'chalk';
-import { Stats, Compiler, Configuration, webpack, DefinePlugin } from 'webpack';
+import chalk from 'chalk';
+const { cyan, yellow, gray } = chalk;
+import Webpack, { Stats, Compiler, Configuration } from 'webpack';
+const { webpack, DefinePlugin } = Webpack;
 import { exec } from 'child_process';
 import { statSync, existsSync } from 'fs';
 import { join, resolve, isAbsolute } from 'path';
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
+import { rehype } from 'rehype';
+import hlsl from 'highlightjs-hlsl';
+
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
 import { config as Config } from '../../../config';
@@ -10,6 +21,7 @@ import { checkUpdated } from './utils';
 import { Loader } from '../../../types';
 
 import { isProduction } from '../../../env';
+import { importJson } from '../utils';
 
 const nodeEnvStr: any = isProduction ? 'production' : 'development';
 
@@ -44,21 +56,15 @@ export const ts: Loader = {
 
         if (updated) {
             console.log('🟦 TypeScript Transformer:');
-            let { dependencies, devDependencies } = require(join(
-                foil.meta.rootPath,
-                'package.json'
-            ));
+            let { dependencies, devDependencies } = await importJson(
+                join(foil.meta.rootPath, 'package.json')
+            );
             if (dependencies || devDependencies) {
                 // Update dependencies through `npm i`
                 await installDependencies(foil.meta.rootPath);
             }
             // Compile module with Webpack
-            await compile(
-                join(newFile, '..'),
-                './main',
-                newMain,
-                foil.rootPermalink
-            );
+            await compile(join(newFile, '..'), './main', newMain, foil);
 
             // Update in Database
             await updateInDatabase(newFile, newMain, file);
@@ -92,7 +98,9 @@ function installDependencies(path: string) {
 /**
  * Compile foil module with Webpack.
  */
-function compile(root: string, main: string, title: string, permalink: string) {
+function compile(root: string, main: string, title: string, foil: any) {
+    let permalink = foil.rootPermalink;
+
     let config: Configuration = {
         mode: nodeEnvStr,
         context: resolve(root),
@@ -170,7 +178,20 @@ function compile(root: string, main: string, title: string, permalink: string) {
                         {
                             loader: '@mdx-js/loader',
                             options: {
-                                jsx: false
+                                jsx: false,
+                                rehypePlugins: [
+                                    rehypeKatex,
+                                    [
+                                        rehypeHighlight,
+                                        {
+                                            languages: { hlsl },
+                                            aliases: {
+                                                msl: 'hlsl',
+                                                wgsl: 'glsl'
+                                            }
+                                        }
+                                    ]
+                                ]
                             }
                         }
                     ]

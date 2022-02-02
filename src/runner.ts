@@ -1,6 +1,7 @@
-import buildScripts from './tasks';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 const { red, green, gray } = chalk;
+
+import buildScripts from './tasks';
 import { Post } from './types';
 export class Runner {
     async run(foils: Post[]) {

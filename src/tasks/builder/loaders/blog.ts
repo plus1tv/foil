@@ -4,7 +4,8 @@ import { readFileSync, existsSync } from 'fs';
 import { checkUpdated } from './utils';
 
 import { Loader } from '../../../types';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
+import { importJson } from '../utils';
 const { yellow } = chalk;
 
 export let blog: Loader = {
@@ -35,7 +36,7 @@ export let blog: Loader = {
 
             let bibPath = join(foil.meta.rootPath, 'bib.json');
             if (existsSync(bibPath)) {
-                config['citations'] = require(bibPath);
+                config['citations'] = await importJson(bibPath);
             }
 
             var article = markademic(config);

@@ -1,5 +1,6 @@
 import { database } from '../../../db';
 import { statSync, existsSync } from 'fs';
+
 /**
  * Checks the database to see if the file exists or has been updated.
  * If it doesn't exist, or its been updated, return true.

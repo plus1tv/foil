@@ -1,11 +1,12 @@
 import { promises } from 'fs';
 const { access } = promises;
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 const { cyan } = chalk;
 import { Collection } from 'mongodb';
 import { database } from '../db';
 import { basename } from 'path';
 import { Post } from '../types';
+import {importJson} from './builder/utils';
 
 async function exists(path) {
     try {
@@ -56,7 +57,7 @@ export async function clean(_foils: Post[]) {
                                         ) {
                                             if (permalink) {
                                                 //check if package.json has same permalink as this, if not delete this.
-                                                let pack = require(file.path);
+                                                let pack = await importJson(file.path);
                                                 if (
                                                     pack.foil &&
                                                     '/' +

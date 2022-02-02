@@ -1,11 +1,14 @@
 import { statSync } from 'fs';
+import { readFile } from 'fs/promises';
 import { dirname, join, basename, relative } from 'path';
-import { fileSync } from 'find';
+import Find from 'find';
+const { fileSync } = Find;
 import { database } from '../../db';
 import { Collection } from 'mongodb';
 import { Post } from '../../types';
-import * as chalk from 'chalk';
-const { cyan, yellow, gray } = chalk;
+import chalk from 'chalk';
+const { cyan, gray } = chalk;
+
 /**
  * The following are various functions to get metadata
  * for specific attributes of the portfolio system.
@@ -126,4 +129,12 @@ export async function writeToDb(foil: Post) {
             )
             .catch(e => console.log(e));
     });
+}
+
+export async function importJson(jsonPath: string) {
+    return JSON.parse(
+        await (
+            await readFile(new URL('file://' + jsonPath, import.meta.url))
+        ).toString()
+    );
 }

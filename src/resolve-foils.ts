@@ -1,6 +1,7 @@
 import { isAbsolute, join } from 'path';
 import { existsSync, statSync } from 'fs';
-import { fileSync } from 'find';
+import Find from 'find';
+const { fileSync } = Find;
 import globToRegExp from 'glob-to-regexp';
 import { toList } from 'dependency-tree';
 
@@ -8,6 +9,9 @@ import { config } from './config';
 import { Post } from './types';
 
 import { getAsset, getDatabaseFiles } from './tasks/builder/utils';
+
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
 /**
  * Builds a list of foil files. Used to check if a foil entry has been updated.

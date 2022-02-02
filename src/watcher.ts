@@ -1,4 +1,4 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 const { gray } = chalk;
 import resolveFoils from './resolve-foils';
 import { Runner } from './runner';

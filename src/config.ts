@@ -1,6 +1,13 @@
 import { resolve, join, isAbsolute } from 'path';
 import { existsSync } from 'fs';
 
+import { createRequire } from "module";
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 let config = {
     // Title for the host site.
     title: 'Foil',
