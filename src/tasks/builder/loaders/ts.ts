@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 
 import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
-import { rehype } from 'rehype';
+import remarkMath from 'remark-math';
 import hlsl from 'highlightjs-hlsl';
 
 import { database } from '../../../db';
@@ -179,6 +179,7 @@ function compile(root: string, main: string, title: string, foil: any) {
                             loader: '@mdx-js/loader',
                             options: {
                                 jsx: false,
+                                remarkPlugins: [remarkMath],
                                 rehypePlugins: [
                                     rehypeKatex,
                                     [

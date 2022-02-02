@@ -83,6 +83,7 @@
 		"path-browserify": "^1.0.1",
 		"rehype-highlight": "^5.0.2",
 		"rehype-katex": "^6.0.2",
+		"remark-math": "^5.1.1",
 		"rss": "^1.2.2",
 		"ts-loader": "^9.2.6",
 		"webpack": "^5.68.0"
