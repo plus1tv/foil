@@ -51,6 +51,11 @@ export const ts: Loader = {
             .replace(/\.tsx?$/, '.js')
             .replace(/\\/g, '/');
 
+        let newFoil = {
+            ...foil,
+            main: newMain
+        };
+
         // Check if main file has been updated or never existed.
         let updated = await checkUpdated(file);
 
@@ -68,15 +73,9 @@ export const ts: Loader = {
 
             // Update in Database
             await updateInDatabase(newFile, newMain, file);
-
-            let newFoil = {
-                ...foil,
-                main: newMain
-            };
-
-            return newFoil;
         }
-        return foil;
+
+        return newFoil;
     }
 };
 
