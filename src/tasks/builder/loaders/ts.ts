@@ -12,7 +12,7 @@ const require = createRequire(import.meta.url);
 import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import remarkMath from 'remark-math';
-import hlsl from 'highlightjs-hlsl';
+import hlsl from './misc/hlsl';
 
 import { database } from '../../../db';
 import { Collection } from 'mongodb';

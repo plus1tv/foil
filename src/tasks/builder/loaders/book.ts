@@ -1,7 +1,8 @@
-import { markademic } from 'markademic';
+import Markademic from 'markademic';
+const { markademic } = Markademic;
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
-import { createRequire } from "module";
+import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 import { Loader } from '../../../types';
@@ -183,10 +184,8 @@ export let book: Loader = {
                 if (existsSync(filePath)) {
                     var config = {
                         input: readFileSync(filePath).toString(),
-                        rerouteLinks: link => join(foil.rootPermalink, link).replace(
-                            /\\/gi,
-                            '/'
-                        )
+                        rerouteLinks: link =>
+                            join(foil.rootPermalink, link).replace(/\\/gi, '/')
                     };
 
                     if (citations) {

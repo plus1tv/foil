@@ -1,4 +1,5 @@
-import { markademic } from 'markademic';
+import Markademic from 'markademic';
+const { markademic } = Markademic;
 import { join, basename } from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { checkUpdated } from './utils';
