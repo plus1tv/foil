@@ -187,7 +187,8 @@ function compile(root: string, main: string, title: string, foil: any) {
                                             languages: { hlsl },
                                             aliases: {
                                                 msl: 'hlsl',
-                                                wgsl: 'glsl'
+                                                wgsl: 'glsl',
+                                                asm: 'x86asm'
                                             }
                                         }
                                     ]
