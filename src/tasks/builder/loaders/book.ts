@@ -1,5 +1,4 @@
-import Markademic from 'markademic';
-const { markademic } = Markademic;
+import { markademic } from 'markademic';
 import { join } from 'path';
 import { readFileSync, existsSync } from 'fs';
 import { createRequire } from 'module';

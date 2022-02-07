@@ -2,7 +2,7 @@
 
 # <a href="https://alain.xyz/blog"><img alt="Foil" src="docs/foil-logo.svg" /></a>
 
-> ✨ Build powerful and flexible portfolios and blogs. ✨
+> ⚠️ Foil is currently not ready for public use, though you're free to take a look at the source! ⚠️
 
 [![License][license-img]][license-url]
 [![Unit Tests][travis-img]][travis-url]
@@ -121,7 +121,7 @@ Your Foil post's `package.json` points to an entry file, be it JavaScript, TypeS
 **Transformers** use a **`test`** object to compare with the current post, and if there's a match, executes a **`transform`** which returns a modified version of a Foil post. For example, here's a transformer for [academically flavored markdown](https://github.com/hyperfuse/markademic):
 
 ```ts
-import markademic from 'markademic';
+import { markademic } from 'markademic';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 

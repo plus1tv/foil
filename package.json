@@ -1,6 +1,6 @@
 {
 	"name": "@plus1tv/foil-cli",
-	"version": "1.0.0-alpha.9",
+	"version": "1.0.0-alpha.11",
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
@@ -24,12 +24,13 @@
 	},
 	"ava": {
 		"verbose": true,
-		"extensions": [
-			"ts"
-		],
-		"require": [
-			"ts-node/register"
-		],
+		"extensions": {
+			"ts": "module"
+		  },
+		  "nodeArguments": [
+			"--loader=ts-node/esm",
+			"--experimental-specifier-resolution=node"
+		  ],
 		"files": [
 			"tests/**/*.test.ts"
 		]
