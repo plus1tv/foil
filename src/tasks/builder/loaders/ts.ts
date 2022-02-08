@@ -186,6 +186,7 @@ function compile(root: string, main: string, title: string, foil: any) {
                                     [
                                         rehypeHighlight,
                                         {
+                                            ignoreMissing: true,
                                             languages: { hlsl, cpp, wgsl },
                                             aliases: {
                                                 msl: 'cpp',
