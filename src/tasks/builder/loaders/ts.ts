@@ -13,6 +13,8 @@ import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import remarkMath from 'remark-math';
 import hlsl from './misc/hlsl';
+import cpp from './misc/cpp';
+import wgsl from './misc/wgsl';
 
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
@@ -184,11 +186,12 @@ function compile(root: string, main: string, title: string, foil: any) {
                                     [
                                         rehypeHighlight,
                                         {
-                                            languages: { hlsl },
+                                            languages: { hlsl, cpp, wgsl },
                                             aliases: {
-                                                msl: 'hlsl',
-                                                wgsl: 'glsl',
-                                                asm: 'x86asm'
+                                                msl: 'cpp',
+                                                asm: 'x86asm',
+                                                amdil: 'x86asm',
+                                                ptx: 'x86asm'
                                             }
                                         }
                                     ]

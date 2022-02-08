@@ -1,6 +1,6 @@
 {
 	"name": "@plus1tv/foil-cli",
-	"version": "1.0.0-alpha.12",
+	"version": "1.0.0-alpha.13",
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
@@ -47,14 +47,14 @@
 	},
 	"devDependencies": {
 		"@types/chalk": "^2.2.0",
-		"@types/node": "^17.0.15",
+		"@types/node": "^17.0.16",
 		"@types/react": "^17.0.39",
 		"@types/react-redux": "^7.1.22",
 		"@types/react-router": "^5.1.18",
 		"@types/react-router-dom": "^5.3.3",
 		"@types/rss": "^0.0.29",
 		"@types/webpack": "^5.28.0",
-		"@typescript-eslint/eslint-plugin": "^5.10.2",
+		"@typescript-eslint/eslint-plugin": "^5.11.0",
 		"ava": "^4.0.1",
 		"c8": "^7.11.0",
 		"clean-webpack-plugin": "^4.0.0",
@@ -65,7 +65,7 @@
 		"microbundle": "^0.14.2",
 		"nyc": "^15.1.x",
 		"prettier": "^2.5.x",
-		"ts-node": "^10.4.0",
+		"ts-node": "^10.5.0",
 		"typescript": "4.5.5"
 	},
 	"dependencies": {
@@ -78,7 +78,7 @@
 		"find": "^0.3.0",
 		"glob-to-regexp": "^0.4.1",
 		"id3js": "^2.1.1",
-		"markademic": "^0.18.0",
+		"markademic": "^0.18.2",
 		"mongodb": "^4.3.1",
 		"path-browserify": "^1.0.1",
 		"rehype-highlight": "^5.0.2",

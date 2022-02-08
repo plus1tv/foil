@@ -80,14 +80,14 @@ export default function (hljs) {
                 'AppendStructuredBuffer asm asm_fragment BlendState break Buffer ByteAddressBuffer case ' +
                 'cbuffer centroid class column_major compile compile_fragment CompileShader const continue ' +
                 'ComputeShader ConsumeStructuredBuffer default DepthStencilState DepthStencilView discard do ' +
-                'DomainShader dword else export extern false for fxgroup GeometryShader groupshared ' +
+                'DomainShader dword else export extern false for fxgroup GeometryShader groupshared numthreads ' +
                 'Hullshader if in inline inout InputPatch interface line lineadj linear LineStream ' +
                 'matrix namespace nointerpolation noperspective ' +
                 'NULL out OutputPatch packoffset pass pixelfragment PixelShader point PointStream precise ' +
                 'RasterizerState RenderTargetView return register row_major RWBuffer RWByteAddressBuffer ' +
                 'RWStructuredBuffer RWTexture1D RWTexture1DArray RWTexture2D RWTexture2DArray RWTexture3D sample ' +
                 'sampler SamplerState SamplerComparisonState shared snorm stateblock stateblock_state static string ' +
-                'struct switch StructuredBuffer tbuffer technique technique10 technique11 texture Texture1D ' +
+                'struct switch StructuredBuffer ConstantBuffer tbuffer technique technique10 technique11 texture Texture1D ' +
                 'Texture1DArray Texture2D Texture2DArray Texture2DMS Texture2DMSArray Texture3D TextureCube ' +
                 'TextureCubeArray true typedef triangle triangleadj TriangleStream uint uniform unorm unsigned ' +
                 'vector vertexfragment VertexShader void volatile while',
