@@ -1,6 +1,6 @@
 /*
-Language: WGSL
-Description: WebGPU Shader Language
+Language: GLSL
+Description: OpenGL Shading Language
 Author: Sergey Tikhomirov <sergey@tikhomirov.io>
 Website: https://en.wikipedia.org/wiki/OpenGL_Shading_Language
 Category: graphics
@@ -8,13 +8,13 @@ Category: graphics
 
 export default function (hljs) {
   return {
-    name: "WGSL",
+    name: "GLSL",
     keywords: {
       keyword:
         // Statements
         "break continue discard do else for if return while switch case default " +
         // Qualifiers
-        "attribute binding group builtin buffer ccw centroid centroid varying coherent column_major const cw " +
+        "attribute binding buffer ccw centroid centroid varying coherent column_major const cw " +
         "depth_any depth_greater depth_less depth_unchanged early_fragment_tests equal_spacing " +
         "flat fractional_even_spacing fractional_odd_spacing highp in index inout invariant " +
         "invocations isolines layout line_strip lines lines_adjacency local_size_x local_size_y " +
@@ -27,7 +27,7 @@ export default function (hljs) {
         "triangles triangles_adjacency uniform varying vertices volatile writeonly",
       type:
         "atomic_uint bool bvec2 bvec3 bvec4 dmat2 dmat2x2 dmat2x3 dmat2x4 dmat3 dmat3x2 dmat3x3 " +
-        "dmat3x4 dmat4 dmat4x2 dmat4x3 dmat4x4 double dvec2 dvec3 dvec4 float f32 f64 iimage1D iimage1DArray " +
+        "dmat3x4 dmat4 dmat4x2 dmat4x3 dmat4x4 double dvec2 dvec3 dvec4 float iimage1D iimage1DArray " +
         "iimage2D iimage2DArray iimage2DMS iimage2DMSArray iimage2DRect iimage3D iimageBuffer " +
         "iimageCube iimageCubeArray image1D image1DArray image2D image2DArray image2DMS image2DMSArray " +
         "image2DRect image3D imageBuffer imageCube imageCubeArray int isampler1D isampler1DArray " +
@@ -40,7 +40,7 @@ export default function (hljs) {
         "image1D uimage1DArray uimage2D uimage2DArray uimage2DMS uimage2DMSArray uimage2DRect " +
         "uimage3D uimageBuffer uimageCube uimageCubeArray uint usampler1D usampler1DArray " +
         "usampler2D usampler2DArray usampler2DMS usampler2DMSArray usampler2DRect usampler3D " +
-        "samplerBuffer usamplerCube usamplerCubeArray uvec2 uvec3 uvec4 vec2 vec3 vec4 void var let",
+        "samplerBuffer usamplerCube usamplerCubeArray uvec2 uvec3 uvec4 vec2 vec3 vec4 void",
       built_in:
         // Constants
         "gl_MaxAtomicCounterBindings gl_MaxAtomicCounterBufferSize gl_MaxClipDistances gl_MaxClipPlanes " +
@@ -124,23 +124,13 @@ export default function (hljs) {
       {
         match: [
           // extra complexity to deal with `enum class` and `enum struct`
-          /\b(?:enum(?:\s+(?:class|struct))?|class|struct|union|fn)/,
+          /\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,
           /\s+/,
           /\w+/,
         ],
         className: {
           1: "keyword",
           3: "title.class",
-        },
-      },
-      {
-        match: [
-          // extra complexity to deal with `enum class` and `enum struct`
-          /@(location|builtin|group|binding|stage)/,
-          /\(/,
-        ],
-        className: {
-          1: "keyword",
         },
       },
     ],
