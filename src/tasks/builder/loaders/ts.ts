@@ -12,9 +12,10 @@ const require = createRequire(import.meta.url);
 import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import remarkMath from 'remark-math';
+import cpp from './misc/cpp';
 import glsl from './misc/glsl';
 import hlsl from './misc/hlsl';
-import cpp from './misc/cpp';
+import msl from './misc/msl';
 import wgsl from './misc/wgsl';
 
 import { database } from '../../../db';
@@ -188,9 +189,14 @@ function compile(root: string, main: string, title: string, foil: any) {
                                         rehypeHighlight,
                                         {
                                             ignoreMissing: true,
-                                            languages: { glsl, hlsl, cpp, wgsl },
+                                            languages: {
+                                                cpp,
+                                                glsl,
+                                                hlsl,
+                                                msl,
+                                                wgsl
+                                            },
                                             aliases: {
-                                                msl: 'cpp',
                                                 asm: 'x86asm',
                                                 amdil: 'x86asm',
                                                 ptx: 'x86asm'

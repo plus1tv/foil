@@ -1,5 +1,5 @@
 /*
-Language: C++
+Language: Metal Shading Language
 Category: common, system
 Website: https://isocpp.org
 */
@@ -201,6 +201,21 @@ export default function (hljs) {
     "while",
     "xor",
     "xor_eq",
+    "vertex",
+    "fragment",
+    "kernel",
+    "attribute",
+    "user",
+    "stage_in",
+    "buffer",
+    "vertex_id",
+    "instance_id",
+    "thread_position_in_threadgroup",
+    "threadgroup_position_in_grid",
+    "thread_index_in_threadgroup",
+    "thread_position_in_grid",
+    "texture",
+    "texture2d",
   ];
 
   // https://en.cppreference.com/w/cpp/keyword
@@ -221,7 +236,49 @@ export default function (hljs) {
     "signed",
     "const",
     "static",
+    "threadgroup",
   ];
+
+  // Data Types
+  RESERVED_TYPES.join(" ") +
+    " " +
+    "Buffer vector matrix sampler SamplerState PixelShader VertexShader " +
+    "texture Texture1D Texture1DArray Texture2D Texture2DArray Texture2DMS Texture2DMSArray Texture3D " +
+    "TextureCube TextureCubeArray struct typedef";
+
+  let matrixBases =
+    "bool double float half int uint " +
+    "min16float min10float min16int min12int min16uint";
+
+  let matrixSuffixes = [
+    "",
+    "1",
+    "2",
+    "3",
+    "4",
+    "1x1",
+    "1x2",
+    "1x3",
+    "1x4",
+    "2x1",
+    "2x2",
+    "2x3",
+    "2x4",
+    "3x1",
+    "3x2",
+    "3x3",
+    "3x4",
+    "4x1",
+    "4x2",
+    "4x3",
+    "4x4",
+  ];
+
+  for (let base of matrixBases.split(" ")) {
+    for (let suffix of matrixSuffixes) {
+      RESERVED_TYPES.push(base + suffix);
+    }
+  }
 
   const TYPE_HINTS = [
     "any",
@@ -533,8 +590,8 @@ export default function (hljs) {
   };
 
   return {
-    name: "C++",
-    aliases: ["cc", "c++", "h++", "hpp", "hh", "hxx", "cxx"],
+    name: "MSL",
+    aliases: ["msl"],
     keywords: CPP_KEYWORDS,
     illegal: "</",
     classNameAliases: {

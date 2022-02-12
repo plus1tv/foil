@@ -1,8 +1,6 @@
 /*
 Language: WGSL
 Description: WebGPU Shader Language
-Author: Sergey Tikhomirov <sergey@tikhomirov.io>
-Website: https://en.wikipedia.org/wiki/OpenGL_Shading_Language
 Category: graphics
 */
 
@@ -27,7 +25,7 @@ export default function (hljs) {
         "triangles triangles_adjacency uniform varying vertices volatile writeonly",
       type:
         "atomic_uint bool bvec2 bvec3 bvec4 dmat2 dmat2x2 dmat2x3 dmat2x4 dmat3 dmat3x2 dmat3x3 " +
-        "dmat3x4 dmat4 dmat4x2 dmat4x3 dmat4x4 double dvec2 dvec3 dvec4 float f32 f64 iimage1D iimage1DArray " +
+        "dmat3x4 dmat4 dmat4x2 dmat4x3 dmat4x4 double dvec2 dvec3 dvec4 float f32 f64 u32 u64 iimage1D iimage1DArray " +
         "iimage2D iimage2DArray iimage2DMS iimage2DMSArray iimage2DRect iimage3D iimageBuffer " +
         "iimageCube iimageCubeArray image1D image1DArray image2D image2DArray image2DMS image2DMSArray " +
         "image2DRect image3D imageBuffer imageCube imageCubeArray int isampler1D isampler1DArray " +
@@ -85,12 +83,16 @@ export default function (hljs) {
         "gl_SampleMaskIn gl_SamplePosition gl_SecondaryColor gl_TessCoord gl_TessLevelInner gl_TessLevelOuter " +
         "gl_TexCoord gl_TextureEnvColor gl_TextureMatrix gl_TextureMatrixInverse gl_TextureMatrixInverseTranspose " +
         "gl_TextureMatrixTranspose gl_Vertex gl_VertexID gl_ViewportIndex gl_WorkGroupID gl_WorkGroupSize gl_in gl_out " +
-        // Functions
+        // Built-in Functions
+        // https://www.w3.org/TR/WGSL/#builtin-functions
+        // Array Built-in Functions
+        "arrayLength " +
+        // Float Built-in Functions
         "EmitStreamVertex EmitVertex EndPrimitive EndStreamPrimitive abs acos acosh all any asin " +
         "asinh atan atanh atomicAdd atomicAnd atomicCompSwap atomicCounter atomicCounterDecrement " +
         "atomicCounterIncrement atomicExchange atomicMax atomicMin atomicOr atomicXor barrier " +
         "bitCount bitfieldExtract bitfieldInsert bitfieldReverse ceil clamp cos cosh cross " +
-        "dFdx dFdy degrees determinant distance dot equal exp exp2 faceforward findLSB findMSB " +
+        "degrees determinant distance dot equal exp exp2 faceforward findLSB findMSB " +
         "floatBitsToInt floatBitsToUint floor fma fract frexp ftransform fwidth greaterThan " +
         "greaterThanEqual groupMemoryBarrier imageAtomicAdd imageAtomicAnd imageAtomicCompSwap " +
         "imageAtomicExchange imageAtomicMax imageAtomicMin imageAtomicOr imageAtomicXor imageLoad " +
@@ -104,10 +106,14 @@ export default function (hljs) {
         "smoothstep sqrt step tan tanh texelFetch texelFetchOffset texture texture1D texture1DLod " +
         "texture1DProj texture1DProjLod texture2D texture2DLod texture2DProj texture2DProjLod " +
         "texture3D texture3DLod texture3DProj texture3DProjLod textureCube textureCubeLod " +
-        "textureGather textureGatherOffset textureGatherOffsets textureGrad textureGradOffset " +
+        "textureGatherOffset textureGatherOffsets textureGrad textureGradOffset " +
         "textureLod textureLodOffset textureOffset textureProj textureProjGrad textureProjGradOffset " +
         "textureProjLod textureProjLodOffset textureProjOffset textureQueryLevels textureQueryLod " +
         "textureSize transpose trunc uaddCarry uintBitsToFloat umulExtended unpackDouble2x32 " +
+        // Derivative Built-in Functions
+        "dpdx dpdxCoarse dpdxFine dpdy dpdyCoarse dpdyFine fwidth fwidthCoarse fwidthFine " +
+        // Texture Built-in Functions
+        "textureDimensions textureGather textureGatherCompare textureLoad textureNumLayers textureNumSamples textureSample textureSampleBias textureSampleCompare textureSampleCompareLevel textureSampleGrad textureSampleLevel textureStore " +
         "unpackHalf2x16 unpackSnorm2x16 unpackSnorm4x8 unpackUnorm2x16 unpackUnorm4x8 usubBorrow",
       literal: "true false",
     },
@@ -134,13 +140,19 @@ export default function (hljs) {
         },
       },
       {
+        match: [/\-\>/, /\s+/, /\w+/],
+        className: {
+          3: "title.class",
+        },
+      },
+      {
         match: [
           // extra complexity to deal with `enum class` and `enum struct`
-          /@(location|builtin|group|binding|stage)/,
+          /@(location|builtin|group|binding|stage|workgroup_size)/,
           /\(/,
         ],
         className: {
-          1: "keyword",
+          1: "meta-keyword",
         },
       },
     ],

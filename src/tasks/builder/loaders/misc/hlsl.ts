@@ -17,6 +17,66 @@ const HLSL_NUMBER_MODE = {
 };
 
 export default function (hljs) {
+  // added for historic reasons because `hljs.C_LINE_COMMENT_MODE` does
+  // not include such support nor can we be sure all the grammars depending
+  // on it would desire this behavior
+  const C_LINE_COMMENT_MODE = hljs.COMMENT("//", "$", {
+    contains: [
+      {
+        begin: /\\\n/,
+      },
+    ],
+  });
+  // https://en.cppreference.com/w/cpp/language/escape
+  // \\ \x \xFF \u2837 \u00323747 \374
+  const CHARACTER_ESCAPES =
+    "\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)";
+  const STRINGS = {
+    className: "string",
+    variants: [
+      {
+        begin: '(u8?|U|L)?"',
+        end: '"',
+        illegal: "\\n",
+        contains: [hljs.BACKSLASH_ESCAPE],
+      },
+      {
+        begin: "(u8?|U|L)?'(" + CHARACTER_ESCAPES + "|.)",
+        end: "'",
+        illegal: ".",
+      },
+      hljs.END_SAME_AS_BEGIN({
+        begin: /(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,
+        end: /\)([^()\\ ]{0,16})"/,
+      }),
+    ],
+  };
+  const PREPROCESSOR = {
+    className: "meta",
+    begin: /#\s*[a-z]+\b/,
+    end: /$/,
+    keywords: {
+      keyword:
+        "if else elif endif define undef warning error line " +
+        "pragma _Pragma ifdef ifndef include",
+    },
+    contains: [
+      {
+        begin: /\\\n/,
+        relevance: 0,
+      },
+      hljs.inherit(STRINGS, {
+        className: "string",
+      }),
+      {
+        className: "string",
+        begin: /<.*?>/,
+      },
+      C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+    ],
+  };
+
   let matrixBases =
     "bool double float half int uint " +
     "min16float min10float min16int min12int min16uint";
@@ -130,14 +190,10 @@ export default function (hljs) {
     },
     illegal: '"',
     contains: [
-      hljs.C_LINE_COMMENT_MODE,
+      C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
       HLSL_NUMBER_MODE,
-      {
-        className: "meta",
-        begin: "#",
-        end: "$",
-      },
+      PREPROCESSOR,
       {
         match: [
           // extra complexity to deal with `enum class` and `enum struct`
