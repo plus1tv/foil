@@ -150,7 +150,7 @@ export default function (hljs) {
         "struct switch StructuredBuffer ConstantBuffer tbuffer technique technique10 technique11 texture Texture1D " +
         "Texture1DArray Texture2D Texture2DArray Texture2DMS Texture2DMSArray Texture3D TextureCube " +
         "TextureCubeArray true typedef triangle triangleadj TriangleStream uint uniform unorm unsigned " +
-        "vector vertexfragment VertexShader void volatile while",
+        "vector vertexfragment VertexShader void volatile while RaytracingAccelerationStructure RayDesc",
 
       type:
         // Data Types
@@ -184,7 +184,7 @@ export default function (hljs) {
         "ProcessTriTessFactorsMin radians rcp reflect refract reversebits round rsqrt saturate sign sin sincos sinh " +
         "smoothstep sqrt step tan tanh tex1D tex1Dbias tex1Dgrad tex1Dlod tex1Dproj tex2D tex2Dbias tex2Dgrad " +
         "tex2Dlod tex2Dproj tex3D tex3Dbias tex3Dgrad tex3Dlod tex3Dproj texCUBE texCUBEbias texCUBEgrad texCUBElod " +
-        "texCUBEproj transpose trunc",
+        "texCUBEproj transpose trunc TraceRay",
 
       literal: "true false",
     },

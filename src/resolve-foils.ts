@@ -223,7 +223,7 @@ export function foilify(packagePath: string): Post {
     }
 
     let sanitizedDatePublished = new Date(datePublished);
-    if (sanitizedDatePublished.getDate() === NaN) {
+    if (Number.isNaN(sanitizedDatePublished.getDate())) {
         console.warn(
             '📅 Provided publish date is invalid, replacing with today: ' +
                 datePublished

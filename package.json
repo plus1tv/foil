@@ -1,6 +1,6 @@
 {
 	"name": "@plus1tv/foil-cli",
-	"version": "1.0.0-alpha.20",
+	"version": "1.0.0-alpha.23",
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
@@ -26,11 +26,11 @@
 		"verbose": true,
 		"extensions": {
 			"ts": "module"
-		  },
-		  "nodeArguments": [
+		},
+		"nodeArguments": [
 			"--loader=ts-node/esm",
 			"--experimental-specifier-resolution=node"
-		  ],
+		],
 		"files": [
 			"tests/**/*.test.ts"
 		]
@@ -47,46 +47,57 @@
 	},
 	"devDependencies": {
 		"@types/chalk": "^2.2.0",
-		"@types/node": "^17.0.18",
-		"@types/react": "^17.0.39",
-		"@types/react-redux": "^7.1.22",
-		"@types/react-router": "^5.1.18",
+		"@types/estree": "^1.0.0",
+		"@types/node": "^18.11.18",
+		"@types/react": "^18.0.27",
+		"@types/react-redux": "^7.1.25",
+		"@types/react-router": "^5.1.20",
 		"@types/react-router-dom": "^5.3.3",
-		"@types/rss": "^0.0.29",
+		"@types/rss": "^0.0.30",
 		"@types/webpack": "^5.28.0",
-		"@typescript-eslint/eslint-plugin": "^5.12.0",
-		"ava": "^4.0.1",
-		"c8": "^7.11.0",
+		"@typescript-eslint/eslint-plugin": "^5.48.2",
+		"ava": "^5.1.1",
+		"c8": "^7.12.0",
 		"clean-webpack-plugin": "^4.0.0",
 		"codecov": "^3.8.x",
 		"coveralls": "^3.1.x",
-		"eslint": "^8.9.x",
-		"lint-staged": "^12.3.x",
-		"microbundle": "^0.14.2",
+		"eslint": "^8.32.x",
+		"lint-staged": "^13.1.x",
+		"microbundle": "^0.15.1",
 		"nyc": "^15.1.x",
-		"prettier": "^2.5.x",
-		"ts-node": "^10.5.0",
-		"typescript": "4.5.5"
+		"prettier": "^2.8.x",
+		"ts-node": "^10.9.1",
+		"typescript": "4.9.4"
 	},
 	"dependencies": {
-		"@mdx-js/loader": "^2.0.0",
-		"chalk": "5.0.0",
+		"@mdx-js/loader": "^2.2.1",
+		"acorn": "^8.8.1",
+		"acorn-jsx": "^5.3.2",
+		"chalk": "5.2.0",
 		"cross-env": "^7.0.3",
-		"dependency-tree": "^8.1.2",
+		"dependency-tree": "^9.0.0",
 		"feed": "^4.2.2",
 		"file-loader": "^6.2.0",
 		"find": "^0.3.0",
 		"glob-to-regexp": "^0.4.1",
+		"highlight.js": "^11.7.0",
 		"id3js": "^2.1.1",
 		"markademic": "^0.19.2",
-		"mongodb": "^4.3.1",
+		"mdast": "^3.0.0",
+		"mdast-util-mdx": "^2.0.0",
+		"mongodb": "^4.13.0",
 		"path-browserify": "^1.0.1",
-		"rehype-highlight": "^5.0.2",
+		"rehype-highlight": "^6.0.0",
 		"rehype-katex": "^6.0.2",
+		"rehype-slug": "^5.1.0",
+		"remark-gfm": "^3.0.1",
 		"remark-math": "^5.1.1",
+		"remark-mdx-code-meta": "^2.0.0",
 		"rss": "^1.2.2",
-		"ts-loader": "^9.2.6",
-		"webpack": "^5.68.0"
+		"ts-loader": "^9.4.2",
+		"unified": "^10.1.2",
+		"unist-util-visit": "^4.1.1",
+		"webpack": "^5.75.0"
 	},
 	"bugs": {
 		"url": "https://github.com/alaingalvan/foil/issues"
