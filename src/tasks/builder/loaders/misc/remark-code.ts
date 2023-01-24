@@ -108,14 +108,14 @@ const transformer: Transformer<Root> = ast => {
             code = addLineNumbersBlockFor(code, { startFrom: 1 });
             code = code.replaceAll('{', '&#123;');
             code = code.replaceAll('}', '&#125;');
+            code = code.replaceAll('<', '&#60;');
+            code = code.replaceAll('>', '&#62;');
             // The user might pass props at runtime like line numbers for highlight, copy, etc.
             // We don't need to know or understand that, we just need to pre-render the code
             // with syntax highlighting.
 
             const codeProps = `className="language-${node.lang}"`;
             const value = `<div><pre ${node.meta}><code ${codeProps}>${code}</code></pre></div>`;
-            console.log('remark-code value replace all {}:');
-            console.log(value);
             const estree = parser.parse(value, {
                 ecmaVersion: 'latest'
             }) as BaseNode as Program;

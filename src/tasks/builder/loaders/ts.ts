@@ -14,7 +14,6 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 
 import remarkCode from './misc/remark-code';
-import remarkMdxCodeMeta from 'remark-mdx-code-meta';
 import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm'
 
