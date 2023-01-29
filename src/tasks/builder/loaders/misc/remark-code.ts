@@ -104,12 +104,13 @@ const transformer: Transformer<Root> = ast => {
                 } catch (err) {}
             }
 
-            // Add line numbers and escape react props:
+            // Add line numbers and escape react prop symbols:
             code = addLineNumbersBlockFor(code, { startFrom: 1 });
             code = code.replaceAll('{', '&#123;');
             code = code.replaceAll('}', '&#125;');
-            code = code.replaceAll('<', '&#60;');
-            code = code.replaceAll('>', '&#62;');
+            code = code.replaceAll('(', '&#40;');
+            code = code.replaceAll(')', '&#41;');
+            
             // The user might pass props at runtime like line numbers for highlight, copy, etc.
             // We don't need to know or understand that, we just need to pre-render the code
             // with syntax highlighting.
