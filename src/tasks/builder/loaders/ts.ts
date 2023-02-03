@@ -10,18 +10,11 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 import rehypeKatex from 'rehype-katex';
-import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 
 import remarkCode from './misc/remark-code';
 import remarkMath from 'remark-math';
-import remarkGfm from 'remark-gfm'
-
-import cpp from './misc/cpp';
-import glsl from './misc/glsl';
-import hlsl from './misc/hlsl';
-import msl from './misc/msl';
-import wgsl from './misc/wgsl';
+import remarkGfm from 'remark-gfm';
 
 import { database } from '../../../db';
 import { Collection } from 'mongodb';
@@ -189,29 +182,12 @@ function compile(root: string, main: string, title: string, foil: any) {
                             options: {
                                 jsx: false,
                                 providerImportSource: '@mdx-js/react',
-                                remarkPlugins: [remarkMath, remarkCode, remarkGfm],
-                                rehypePlugins: [
-                                    rehypeKatex,
-                                    rehypeSlug,
-                                    [
-                                        rehypeHighlight,
-                                        {
-                                            ignoreMissing: true,
-                                            languages: {
-                                                cpp,
-                                                glsl,
-                                                hlsl,
-                                                msl,
-                                                wgsl
-                                            },
-                                            aliases: {
-                                                asm: 'x86asm',
-                                                amdil: 'x86asm',
-                                                ptx: 'x86asm'
-                                            }
-                                        }
-                                    ]
-                                ]
+                                remarkPlugins: [
+                                    remarkMath,
+                                    remarkCode,
+                                    remarkGfm
+                                ],
+                                rehypePlugins: [rehypeKatex, rehypeSlug]
                             }
                         }
                     ]

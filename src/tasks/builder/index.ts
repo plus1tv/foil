@@ -11,8 +11,7 @@ import { Post, Loader } from '../../types';
  */
 let loaders = [ts, blog, book];
 
-export function testLoader(loader, foilModule)
-{
+export function testLoader(loader, foilModule) {
     return Object.keys(loader.test).reduce((prev, cur) => {
         let reg = new RegExp(loader.test[cur]);
         return prev || reg.test(foilModule[cur]);

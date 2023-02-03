@@ -15,7 +15,8 @@ import { MdxFlowExpression } from 'mdast-util-mdx';
 import { Plugin, Transformer } from 'unified';
 import { visit } from 'unist-util-visit';
 import hljs from 'highlight.js';
-const { getLanguage, highlight, highlightAuto } = hljs;
+const { getLanguage, highlight } = hljs;
+import sanitizeHtml from 'sanitize-html';
 
 const parser = Parser.extend(jsx());
 
@@ -55,6 +56,13 @@ function addLineNumbersBlockFor(inputHtml, options) {
         var html = '';
 
         for (var i = 0, l = lines.length; i < l; i++) {
+            // Close any HTML tags that haven't been closed.
+            let line = lines[i].length > 0 ? lines[i] : ' ';
+            line = sanitizeHtml(line, {
+                allowedClasses: {
+                    '*': ['hljs*']
+                }
+            });
             html += format(
                 '<tr>' +
                     '<td class="{0} {1}" {3}="{5}">' +
@@ -71,7 +79,7 @@ function addLineNumbersBlockFor(inputHtml, options) {
                     DATA_ATTR_NAME,
                     CODE_BLOCK_NAME,
                     i + options.startFrom,
-                    lines[i].length > 0 ? lines[i] : ' '
+                    line
                 ]
             );
         }
@@ -87,9 +95,6 @@ const transformer: Transformer<Root> = ast => {
         ast,
         'code',
         (node: Code, index: number | null, parent: Parent | null) => {
-            if (!node.meta) {
-                return;
-            }
             if (!node.lang) {
                 return;
             }
@@ -100,20 +105,23 @@ const transformer: Transformer<Root> = ast => {
             // 🖋️ Process code with highlight.js
             if (node.lang && getLanguage(node.lang)) {
                 try {
-                    code = highlight(code, { language: node.lang }).value;
-                } catch (err) {}
+                    let result = highlight(code, { language: node.lang });
+                    if (result.errorRaised) {
+                        console.error(result.errorRaised.message);
+                    }
+                    code = result.value;
+                } catch (err) {
+                    console.error(err);
+                }
             }
 
             // Add line numbers and escape react prop symbols:
-            code = addLineNumbersBlockFor(code, { startFrom: 1 });
+            if (node.meta) {
+                code = addLineNumbersBlockFor(code, { startFrom: 1 });
+            }
             code = code.replaceAll('{', '&#123;');
             code = code.replaceAll('}', '&#125;');
-            code = code.replaceAll('(', '&#40;');
-            code = code.replaceAll(')', '&#41;');
-            
-            // The user might pass props at runtime like line numbers for highlight, copy, etc.
-            // We don't need to know or understand that, we just need to pre-render the code
-            // with syntax highlighting.
+            code = code.replaceAll('\n', "{'\\n'}");
 
             const codeProps = `className="language-${node.lang}"`;
             const value = `<div><pre ${node.meta}><code ${codeProps}>${code}</code></pre></div>`;

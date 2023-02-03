@@ -1,5 +1,5 @@
-import { isAbsolute, join } from 'path';
-import { existsSync, statSync } from 'fs';
+import { dirname, isAbsolute, join, relative } from 'path';
+import { existsSync, readFile, readFileSync, statSync } from 'fs';
 import Find from 'find';
 const { fileSync } = Find;
 import globToRegExp from 'glob-to-regexp';
@@ -10,7 +10,7 @@ import { Post } from './types';
 
 import { getAsset, getDatabaseFiles } from './tasks/builder/utils';
 
-import { createRequire } from "module";
+import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
 /**
@@ -118,10 +118,7 @@ export function foilify(packagePath: string): Post {
         return null;
     }
 
-    permalink = '/' + permalink.replace(
-        /\\/gi,
-        '/'
-    );
+    permalink = '/' + permalink.replace(/\\/gi, '/');
 
     let rootPermalink = permalink;
 
@@ -151,29 +148,63 @@ export function foilify(packagePath: string): Post {
                 filename = join(rootPath, filename);
             }
             if (existsSync(filename)) {
-                let dependencies = toList({
-                    filename,
-                    directory: rootPath,
-                    filter: path => path.indexOf('node_modules') === -1,
-                    nodeModulesConfig: {
-                        entry: 'module'
-                    },
-                    tsConfig: {
-                        compilerOptions: {
-                            target: 'es2016',
-                            module: 'CommonJS',
-                            isolatedModules: true,
-                            allowSyntheticDefaultImports: true,
-                            noImplicitAny: false,
-                            suppressImplicitAnyIndexErrors: true,
-                            removeComments: true,
-                            jsx: 'react'
+                const addDependencies = (jsFile: string) => {
+                    let dependencies = toList({
+                        filename: jsFile,
+                        directory: rootPath,
+                        filter: path => path.indexOf('node_modules') === -1,
+                        nodeModulesConfig: {
+                            entry: 'module'
                         },
+                        tsConfig: {
+                            compilerOptions: {
+                                target: 'es2016',
+                                module: 'CommonJS',
+                                isolatedModules: true,
+                                allowSyntheticDefaultImports: true,
+                                noImplicitAny: false,
+                                suppressImplicitAnyIndexErrors: true,
+                                removeComments: true,
+                                jsx: 'react'
+                            },
 
-                        transpileOnly: true
-                    }
-                });
-                dependencies.forEach(file => packageFilesSet.add(file));
+                            transpileOnly: true
+                        }
+                    });
+                    dependencies.forEach((file: string) => {
+                        packageFilesSet.add(file);
+                        // MDX files get special treatment:
+                        if (/\.mdx$/.test(file) && file != jsFile) {
+                            // Read the file and resolve all 'import' statements manually.
+                            // Also doesn't cover the case where an import statement is inside a code block.
+                            // But those should just not resolve to files. Still, would be nice to look around.
+                            let mdxPost = readFileSync(file).toString();
+                            let importFile = /(import\s*.*)(("|')(.*)("|'))/g;
+                            let matches = mdxPost.match(importFile);
+                            for (let m of matches) {
+                                // Get the './my/path' portion of the import statement.
+                                let groups = /('|")(.*)('|")/.exec(m);
+                                let mdxImportFile = groups[2];
+
+                                // Build an absolute path from it relative to the current file.
+                                let filePath = dirname(file);
+                                let fileNameTest = join(
+                                    filePath,
+                                    mdxImportFile
+                                );
+                                fileNameTest = relative(rootPath, fileNameTest);
+                                let foundMDXImports = fileSync(
+                                    new RegExp(fileNameTest + '.(j|t)sx?$'),
+                                    rootPath
+                                );
+                                for (let foundMDXImport of foundMDXImports) {
+                                    addDependencies(foundMDXImport);
+                                }
+                            }
+                        }
+                    });
+                };
+                addDependencies(filename);
             }
         }
     }

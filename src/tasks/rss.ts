@@ -74,9 +74,13 @@ export async function rssFeed(_foils: Post[]) {
                 .sort({
                     datePublished: -1
                 })
-                .toArray((err, data) => {
-                    if (err || data.length === 0) return res([]);
+                .toArray()
+                .then(data => {
+                    if (data.length === 0) return res([]);
                     res(data);
+                })
+                .catch(e => {
+                    res([]);
                 });
         })
     );
@@ -90,17 +94,19 @@ export async function rssFeed(_foils: Post[]) {
                     from: item.cover
                 })
                     .limit(1)
-                    .toArray((err, data) => {
-                        if (err || data.length === 0) return res(null);
-                        res(data);
-                    });
+                    .toArray()
+                    .then(data => {
+                        if (data.length === 0) return res(null);
+                        return res(data);
+                    })
+                    .catch(err => null);
             })
         );
 
-        var filesize = 0;
+        var fileSize = 0;
 
         if (fileData) {
-            filesize = statSync(fileData[0].to).size;
+            fileSize = statSync(fileData[0].to).size;
         }
 
         feed.addItem({
@@ -110,15 +116,15 @@ export async function rssFeed(_foils: Post[]) {
             description: item.description,
             author: [
                 {
-                    name: Config.author.name, 
+                    name: Config.author.name,
                     email: Config.author.email,
-                    link: Config.author.url 
-                },
+                    link: Config.author.url
+                }
             ],
             date: item.datePublished,
             image: {
                 url: Config.author.url + item.cover,
-                length: filesize
+                length: fileSize
             }
         });
     }

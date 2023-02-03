@@ -2,7 +2,8 @@ import { MongoClient } from 'mongodb';
 import { config as foilConfig } from './config';
 
 console.log(
-    '🍃 Opening MongoDB Connection. ' + ('\x1b[2m(' + foilConfig.mongoUrl + ')\x1b[0m')
+    '🍃 Opening MongoDB Connection. ' +
+        ('\x1b[2m(' + foilConfig.mongoUrl + ')\x1b[0m')
 );
 const config = {
     appName: 'Foil Backend'

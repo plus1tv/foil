@@ -1,7 +1,7 @@
 import { resolve, join, isAbsolute } from 'path';
 import { existsSync } from 'fs';
 
-import { createRequire } from "module";
+import { createRequire } from 'module';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 

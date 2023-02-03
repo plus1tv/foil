@@ -15,9 +15,7 @@ export class Runner {
 
             await scripts[i](foils)
                 .then(_ => {
-                    console.log(
-                        `✔️️ ${green(` Finished Task ${progress}!`)}`
-                    );
+                    console.log(`✔️️ ${green(` Finished Task ${progress}!`)}`);
                 })
                 .catch(err => {
                     console.log(`\n❌ ${red(` Failed Task ${progress}!`)}`);
