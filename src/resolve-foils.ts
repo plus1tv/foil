@@ -194,7 +194,13 @@ export function foilify(packagePath: string): Post {
                                 );
                                 fileNameTest = relative(rootPath, fileNameTest);
                                 let foundMDXImports = fileSync(
-                                    new RegExp(fileNameTest + '.(j|t)sx?$'),
+                                    new RegExp(
+                                        '(' +
+                                            fileNameTest +
+                                            '(\\/|\\\\)index\\.(j|t)sx?$)|(' +
+                                            fileNameTest +
+                                            '\\.(j|t)sx?$)'
+                                    ),
                                     rootPath
                                 );
                                 for (let foundMDXImport of foundMDXImports) {

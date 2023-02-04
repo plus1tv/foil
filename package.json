@@ -1,6 +1,6 @@
 {
 	"name": "@plus1tv/foil-cli",
-	"version": "1.0.0-alpha.30",
+	"version": "1.0.0-alpha.32",
 	"description": "✨ A sparkly shiny portfolio indexing system. Convert blog posts, art, music, etc. into database entries that you can traverse and search through.",
 	"repository": {
 		"type": "git",
@@ -82,7 +82,7 @@
 		"glob-to-regexp": "^0.4.1",
 		"highlight.js": "^11.7.0",
 		"id3js": "^2.1.1",
-		"markademic": "^0.20.0",
+		"markademic": "^0.20.1",
 		"mdast": "^3.0.0",
 		"mdast-util-mdx": "^2.0.1",
 		"mongodb": "^5.0.0",
